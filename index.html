@@ -205,8 +205,8 @@ button.active {
     </div>
 
 
-    <button id="go">
-      🎲 開始抽題
+    <button id="go" disabled>
+      🔊 聽發音
     </button>
 
   </section>
@@ -305,6 +305,9 @@ let busy = false;
 let showPinyin = true;
 
 let currentPinyin = '';
+
+let currentQuestion = '';
+let audioContext = null;
 
 
 /* ==============================
@@ -413,6 +416,47 @@ function pickQuestion() {
 }
 
 
+/* Short click sound made in the browser, without external files. */
+function playSpinSound() {
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    audioContext ||= new AudioContextClass();
+    audioContext.resume();
+    const now = audioContext.currentTime;
+    for (let i = 0; i < 4; i++) {
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      const start = now + i * 0.09;
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(440 + i * 90, start);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(0.08, start + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.12);
+      oscillator.connect(gain).connect(audioContext.destination);
+      oscillator.start(start);
+      oscillator.stop(start + 0.13);
+    }
+  } catch (_) {
+    // Drawing a question still works if sound is unavailable.
+  }
+}
+
+function speakQuestion() {
+  if (!currentQuestion || !window.speechSynthesis ||
+      !window.SpeechSynthesisUtterance) return;
+
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(currentQuestion);
+  utterance.lang = 'zh-TW';
+  utterance.rate = 0.82;
+  const voices = window.speechSynthesis.getVoices();
+  utterance.voice = voices.find(voice => voice.lang.toLowerCase() === 'zh-tw')
+    || voices.find(voice => voice.lang.toLowerCase().startsWith('zh'))
+    || null;
+  window.speechSynthesis.speak(utterance);
+}
+
 /* ==============================
    轉球
    ============================== */
@@ -423,8 +467,10 @@ function spin() {
 
 
   busy = true;
-
+  window.speechSynthesis?.cancel();
+  currentQuestion = '';
   go.disabled = true;
+  playSpinSound();
 
 
   cn.textContent =
@@ -464,6 +510,7 @@ function spin() {
       pickQuestion();
 
 
+    currentQuestion = item[0];
     currentPinyin =
       item[1];
 
@@ -507,7 +554,7 @@ ball.addEventListener(
 
 go.addEventListener(
   'click',
-  spin
+  speakQuestion
 );
 
 
@@ -531,6 +578,9 @@ document
 
 
         last = '';
+        currentQuestion = '';
+        window.speechSynthesis?.cancel();
+        go.disabled = true;
 
         currentPinyin = '';
 

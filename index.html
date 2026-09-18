@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CSL2 中文轉球抽題</title>
+
+<style>
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+               "Noto Sans TC", Arial, sans-serif;
+  color: #172033;
+  background: #f6f8fc;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 24px;
+}
+
+main {
+  max-width: 760px;
+  margin: auto;
+  text-align: center;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  min-height: 48px;
+  border-radius: 999px;
+  border: 1px solid #cbd3df;
+  background: white;
+  padding: 10px 22px;
+  color: #172033;
+}
+
+button.active {
+  background: #dcecff;
+  border: 2px solid #3377cc;
+  font-weight: 700;
+}
+
+.panel {
+  background: white;
+  border: 1px solid #dfe4ec;
+  border-radius: 28px;
+  padding: 28px 22px;
+}
+
+.small {
+  color: #667085;
+  margin: 0 0 16px;
+}
+
+.ball {
+  width: min(68vw, 300px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  margin: auto;
+  border: 5px solid #d8dee8;
+
+  background:
+    radial-gradient(
+      circle at 32% 25%,
+      #fff 0 11%,
+      #eaf1fb 28%,
+      #c8d8ee 66%,
+      #9db5d5 100%
+    );
+
+  box-shadow:
+    inset -20px -22px 35px #7894bb55,
+    0 12px 30px #52647b33;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.ball span {
+  font-size: clamp(70px, 18vw, 118px);
+  font-weight: 800;
+}
+
+.ball.spin {
+  animation: spin 1.55s cubic-bezier(.16,.8,.2,1);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  35% {
+    transform: rotate(720deg) scale(1.05);
+  }
+
+  100% {
+    transform: rotate(1800deg) scale(1);
+  }
+}
+
+.result {
+  min-height: 112px;
+  margin-top: 20px;
+}
+
+.cn {
+  font-size: clamp(46px, 12vw, 72px);
+  font-weight: 800;
+}
+
+.py {
+  font-size: clamp(24px, 6vw, 34px);
+  color: #596579;
+  margin-top: 4px;
+}
+
+#go {
+  width: min(100%, 520px);
+  border-radius: 16px;
+  background: #3478d4;
+  color: white;
+  border: 0;
+  font-weight: 800;
+  font-size: 20px;
+  margin-top: 8px;
+}
+
+.bottom {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  color: #667085;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ball.spin {
+    animation-duration: .15s;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main>
+
+  <div class="tabs">
+    <button class="mode active" data-mode="all">
+      全部
+    </button>
+
+    <button class="mode" data-mode="single">
+      單生字
+    </button>
+
+    <button class="mode" data-mode="word">
+      雙字詞語
+    </button>
+  </div>
+
+
+  <section class="panel">
+
+    <p class="small" id="label">
+      目前題庫：全部
+    </p>
+
+
+    <button
+      class="ball"
+      id="ball"
+      aria-label="旋轉並抽題"
+    >
+      <span id="ballText">？</span>
+    </button>
+
+
+    <div class="result" aria-live="polite">
+
+      <div class="cn" id="cn">
+        準備好了嗎？
+      </div>
+
+      <div class="py" id="py">
+        點球開始！
+      </div>
+
+    </div>
+
+
+    <button id="go">
+      🎲 開始抽題
+    </button>
+
+  </section>
+
+
+  <div class="bottom">
+
+    <button id="toggle">
+      🙈 隱藏拼音
+    </button>
+
+    <span id="count"></span>
+
+  </div>
+
+</main>
+
+
+<script>
+
+/* ==============================
+   題庫
+   ============================== */
+
+const single = [
+
+  ['你','nǐ'],
+  ['好','hǎo'],
+  ['我','wǒ'],
+  ['的','de'],
+  ['名','míng'],
+  ['字','zì'],
+  ['叫','jiào'],
+  ['什','shén'],
+  ['麼','me'],
+
+  ['一','yī'],
+  ['二','èr'],
+  ['三','sān'],
+  ['四','sì'],
+  ['五','wǔ'],
+  ['六','liù'],
+  ['七','qī'],
+  ['八','bā'],
+  ['九','jiǔ'],
+  ['十','shí']
+
+];
+
+
+const word = [
+
+  ['你好','nǐ hǎo'],
+  ['我的','wǒ de'],
+  ['名字','míng zi'],
+  ['什麼','shén me']
+
+];
+
+
+const banks = {
+
+  single: single,
+
+  word: word,
+
+  all: [
+    ...single,
+    ...word
+  ]
+
+};
+
+
+const names = {
+
+  all: '全部',
+
+  single: '單生字',
+
+  word: '雙字詞語'
+
+};
+
+
+/* ==============================
+   遊戲狀態
+   ============================== */
+
+let mode = 'all';
+
+let last = '';
+
+let busy = false;
+
+let showPinyin = true;
+
+let currentPinyin = '';
+
+
+/* ==============================
+   畫面元件
+   ============================== */
+
+const ball =
+  document.querySelector('#ball');
+
+const ballText =
+  document.querySelector('#ballText');
+
+const cn =
+  document.querySelector('#cn');
+
+const py =
+  document.querySelector('#py');
+
+const go =
+  document.querySelector('#go');
+
+const label =
+  document.querySelector('#label');
+
+const count =
+  document.querySelector('#count');
+
+const toggle =
+  document.querySelector('#toggle');
+
+
+/* ==============================
+   更新題庫顯示
+   ============================== */
+
+function updateUI() {
+
+  label.textContent =
+    '目前題庫：' + names[mode];
+
+  count.textContent =
+    '題庫共 ' +
+    banks[mode].length +
+    ' 題';
+
+
+  document
+    .querySelectorAll('.mode')
+    .forEach(button => {
+
+      button.classList.toggle(
+        'active',
+        button.dataset.mode === mode
+      );
+
+    });
+
+}
+
+
+/* ==============================
+   隨機抽題
+   避免連續相同
+   ============================== */
+
+function pickQuestion() {
+
+  const bank =
+    banks[mode];
+
+  let item =
+    bank[
+      Math.floor(
+        Math.random() *
+        bank.length
+      )
+    ];
+
+
+  let attempts = 0;
+
+
+  while (
+    item[0] === last &&
+    bank.length > 1 &&
+    attempts < 20
+  ) {
+
+    item =
+      bank[
+        Math.floor(
+          Math.random() *
+          bank.length
+        )
+      ];
+
+    attempts++;
+
+  }
+
+
+  last = item[0];
+
+  return item;
+
+}
+
+
+/* ==============================
+   轉球
+   ============================== */
+
+function spin() {
+
+  if (busy) return;
+
+
+  busy = true;
+
+  go.disabled = true;
+
+
+  cn.textContent =
+    '轉～轉～轉～';
+
+
+  py.textContent =
+    showPinyin
+      ? '會抽到哪一個呢？'
+      : '';
+
+
+  ballText.textContent =
+    '？';
+
+
+  ball.classList.remove('spin');
+
+
+  void ball.offsetWidth;
+
+
+  ball.classList.add('spin');
+
+
+  const reducedMotion =
+    window
+      .matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      )
+      .matches;
+
+
+  setTimeout(() => {
+
+    const item =
+      pickQuestion();
+
+
+    currentPinyin =
+      item[1];
+
+
+    ballText.textContent =
+      item[0];
+
+
+    cn.textContent =
+      item[0];
+
+
+    py.textContent =
+      showPinyin
+        ? currentPinyin
+        : '';
+
+
+    ball.classList.remove('spin');
+
+
+    busy = false;
+
+    go.disabled = false;
+
+
+  }, reducedMotion ? 180 : 1550);
+
+}
+
+
+/* ==============================
+   點球 / 開始按鈕
+   ============================== */
+
+ball.addEventListener(
+  'click',
+  spin
+);
+
+
+go.addEventListener(
+  'click',
+  spin
+);
+
+
+/* ==============================
+   切換題庫
+   ============================== */
+
+document
+  .querySelectorAll('.mode')
+  .forEach(button => {
+
+    button.addEventListener(
+      'click',
+      () => {
+
+        if (busy) return;
+
+
+        mode =
+          button.dataset.mode;
+
+
+        last = '';
+
+        currentPinyin = '';
+
+
+        ballText.textContent =
+          '？';
+
+
+        cn.textContent =
+          names[mode];
+
+
+        py.textContent =
+          showPinyin
+            ? '點球開始抽題！'
+            : '';
+
+
+        updateUI();
+
+      }
+    );
+
+  });
+
+
+/* ==============================
+   顯示 / 隱藏拼音
+   ============================== */
+
+toggle.addEventListener(
+  'click',
+  () => {
+
+    showPinyin =
+      !showPinyin;
+
+
+    toggle.textContent =
+      showPinyin
+        ? '🙈 隱藏拼音'
+        : '👀 顯示拼音';
+
+
+    py.textContent =
+      showPinyin
+        ? (
+            currentPinyin ||
+            '點球開始！'
+          )
+        : '';
+
+  }
+);
+
+
+/* 初始化 */
+
+updateUI();
+
+</script>
+
+</body>
+</html>

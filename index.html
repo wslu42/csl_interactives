@@ -281,6 +281,37 @@ const banks = {
 };
 
 
+/* ==============================
+   Azure TTS 音檔對照
+   ============================== */
+
+const audioMap = {
+  '你': 'Audio/csl2_rolling-0001.mp3',
+  '好': 'Audio/csl2_rolling-0002.mp3',
+  '我': 'Audio/csl2_rolling-0003.mp3',
+  '的': 'Audio/csl2_rolling-0004.mp3',
+  '名': 'Audio/csl2_rolling-0005.mp3',
+  '字': 'Audio/csl2_rolling-0006.mp3',
+  '叫': 'Audio/csl2_rolling-0007.mp3',
+  '什': 'Audio/csl2_rolling-0008.mp3',
+  '麼': 'Audio/csl2_rolling-0009.mp3',
+  '一': 'Audio/csl2_rolling-0010.mp3',
+  '二': 'Audio/csl2_rolling-0011.mp3',
+  '三': 'Audio/csl2_rolling-0012.mp3',
+  '四': 'Audio/csl2_rolling-0013.mp3',
+  '五': 'Audio/csl2_rolling-0014.mp3',
+  '六': 'Audio/csl2_rolling-0015.mp3',
+  '七': 'Audio/csl2_rolling-0016.mp3',
+  '八': 'Audio/csl2_rolling-0017.mp3',
+  '九': 'Audio/csl2_rolling-0018.mp3',
+  '十': 'Audio/csl2_rolling-0019.mp3',
+  '你好': 'Audio/csl2_rolling-0020.mp3',
+  '我的': 'Audio/csl2_rolling-0021.mp3',
+  '名字': 'Audio/csl2_rolling-0022.mp3',
+  '什麼': 'Audio/csl2_rolling-0023.mp3'
+};
+
+
 const names = {
 
   all: '全部',
@@ -308,6 +339,7 @@ let currentPinyin = '';
 
 let currentQuestion = '';
 let audioContext = null;
+let currentAudio = null;
 
 
 /* ==============================
@@ -442,19 +474,119 @@ function playSpinSound() {
   }
 }
 
-function speakQuestion() {
-  if (!currentQuestion || !window.speechSynthesis ||
+function browserSpeak(text) {
+  if (!window.speechSynthesis ||
       !window.SpeechSynthesisUtterance) return;
 
   window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(currentQuestion);
+
+  const utterance =
+    new SpeechSynthesisUtterance(text);
+
   utterance.lang = 'zh-TW';
   utterance.rate = 0.82;
-  const voices = window.speechSynthesis.getVoices();
-  utterance.voice = voices.find(voice => voice.lang.toLowerCase() === 'zh-tw')
-    || voices.find(voice => voice.lang.toLowerCase().startsWith('zh'))
+
+  const voices =
+    window.speechSynthesis.getVoices();
+
+  utterance.voice =
+    voices.find(
+      voice =>
+        voice.lang.toLowerCase() ===
+        'zh-tw'
+    )
+    || voices.find(
+      voice =>
+        voice.lang
+          .toLowerCase()
+          .startsWith('zh')
+    )
     || null;
-  window.speechSynthesis.speak(utterance);
+
+  window.speechSynthesis.speak(
+    utterance
+  );
+}
+
+
+function stopQuestionAudio() {
+
+  if (currentAudio) {
+
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+
+  }
+
+  stopQuestionAudio();
+
+}
+
+
+function speakQuestion() {
+
+  if (!currentQuestion) return;
+
+  stopQuestionAudio();
+
+  const text = currentQuestion;
+  const source = audioMap[text];
+
+  if (!source) {
+
+    browserSpeak(text);
+    return;
+
+  }
+
+  const audio = new Audio(source);
+  let fallbackUsed = false;
+
+  currentAudio = audio;
+
+  const fallback = () => {
+
+    if (fallbackUsed) return;
+    fallbackUsed = true;
+
+    if (currentAudio === audio) {
+      currentAudio = null;
+    }
+
+    browserSpeak(text);
+
+  };
+
+  audio.addEventListener(
+    'ended',
+    () => {
+
+      if (currentAudio === audio) {
+        currentAudio = null;
+      }
+
+    },
+    { once: true }
+  );
+
+  audio.addEventListener(
+    'error',
+    fallback,
+    { once: true }
+  );
+
+  const playPromise = audio.play();
+
+  if (
+    playPromise &&
+    typeof playPromise.catch === 'function'
+  ) {
+
+    playPromise.catch(fallback);
+
+  }
+
 }
 
 /* ==============================
@@ -467,7 +599,7 @@ function spin() {
 
 
   busy = true;
-  window.speechSynthesis?.cancel();
+  stopQuestionAudio();
   currentQuestion = '';
   go.disabled = true;
   playSpinSound();
@@ -579,7 +711,7 @@ document
 
         last = '';
         currentQuestion = '';
-        window.speechSynthesis?.cancel();
+        stopQuestionAudio();
         go.disabled = true;
 
         currentPinyin = '';

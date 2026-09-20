@@ -173,6 +173,10 @@ button.active {
     <button class="mode" data-mode="word">
       雙字詞語
     </button>
+
+    <button class="mode" data-mode="number">
+      🔢 數字
+    </button>
   </div>
 
 
@@ -241,7 +245,12 @@ const single = [
   ['字','zì'],
   ['叫','jiào'],
   ['什','shén'],
-  ['麼','me'],
+  ['麼','me']
+
+];
+
+
+const number = [
 
   ['一','yī'],
   ['二','èr'],
@@ -273,9 +282,12 @@ const banks = {
 
   word: word,
 
+  number: number,
+
   all: [
     ...single,
-    ...word
+    ...word,
+    ...number
   ]
 
 };
@@ -318,7 +330,9 @@ const names = {
 
   single: '單生字',
 
-  word: '雙字詞語'
+  word: '雙字詞語',
+
+  number: '🔢 數字'
 
 };
 

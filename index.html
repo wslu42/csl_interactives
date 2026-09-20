@@ -554,7 +554,15 @@ function speakQuestion() {
 
   }
 
-  const audio = new Audio(source);
+  // Version the static audio URL so Firefox does not reuse a stale
+  // cached 404/old asset after GitHub Pages updates.
+  const audioUrl =
+    source + '?v=20260920-2';
+
+  const audio = new Audio(audioUrl);
+  audio.preload = 'auto';
+  audio.volume = 1;
+
   let fallbackUsed = false;
 
   currentAudio = audio;

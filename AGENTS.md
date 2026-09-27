@@ -53,6 +53,16 @@ The root page is the portal. Each activity lives in its own first-level subdirec
 - Examples: `feat/portal-landing-page`, `fix/audio-paths`, `chore/project-guidelines`.
 - Do not use vague branch names such as `update`, `test`, or `new-branch`.
 
+## Pull request workflow
+
+- Create a pull request only when the user explicitly requests one; never merge a pull request unless explicitly requested.
+- By default, create every pull request from a branch based on the latest `origin/main`, with `main` as its base branch.
+- Do not create a pull request whose base is another feature, fix, chore, or open pull-request branch unless the user explicitly asks for a stacked PR.
+- Before creating a pull request, fetch `origin`, verify the intended base and head branches, and review the exact diff against the intended base.
+- When a preceding pull request is merged, update any follow-up branch from the new `origin/main` before opening its pull request; do not merge follow-up work into a stale former base branch.
+- After creating a pull request, verify its URL, base branch, head branch, and mergeability through GitHub.
+- State the intended merge order when the user explicitly requests stacked pull requests.
+
 ## Collaboration
 
 - Treat user requests as the source of product intent; ask for clarification only when a decision would materially change scope, design, or behavior.

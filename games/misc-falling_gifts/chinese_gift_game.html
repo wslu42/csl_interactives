@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#fff4d8">
+<title>中文禮物大作戰</title>
+<style>
+:root{--ink:#24324a;--paper:#fffaf0;--panel:#ffffffd9;--shadow:0 12px 35px #57431e22}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:linear-gradient(#8ed7ff 0 62%,#c7f0a5 62%)}
+button,select{font:inherit}
+#app{height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
+header{display:flex;gap:8px;align-items:center;padding:max(8px,env(safe-area-inset-top)) 10px 8px;background:#ffffffb8;backdrop-filter:blur(8px);z-index:5}
+.brand{font-weight:900;font-size:clamp(17px,4vw,24px);white-space:nowrap}.stats{display:flex;gap:7px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
+.pill{background:#fff;border-radius:999px;padding:6px 10px;font-weight:800;box-shadow:0 3px 12px #0001;font-size:14px}
+#game{position:relative;overflow:hidden;touch-action:manipulation}
+.cloud{position:absolute;background:#fff9;border-radius:999px;width:100px;height:30px;filter:blur(.2px)}
+.cloud:before,.cloud:after{content:"";position:absolute;background:inherit;border-radius:50%;width:45px;height:45px;top:-18px}.cloud:before{left:15px}.cloud:after{right:12px}
+.gift{position:absolute;width:88px;height:82px;transform:translate(-50%,-50%);border:0;background:none;padding:0;cursor:pointer;filter:drop-shadow(0 7px 5px #0003)}
+.gift .box{position:absolute;left:7px;right:7px;bottom:4px;height:56px;border-radius:8px;border:4px solid #fff8;display:flex;align-items:center;justify-content:center}
+.gift .lid{position:absolute;left:2px;right:2px;top:14px;height:18px;border-radius:7px;border:3px solid #fff8}
+.gift .ribbon{position:absolute;width:14px;height:58px;left:37px;bottom:4px;background:#fff8}
+.gift .bow:before,.gift .bow:after{content:"";position:absolute;top:2px;width:27px;height:22px;border:7px solid #fff8;border-radius:50% 50% 35% 50%}
+.gift .bow:before{left:14px;transform:rotate(20deg)}.gift .bow:after{right:14px;transform:scaleX(-1) rotate(20deg)}
+.gift .char{position:absolute;inset:28px 7px 4px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#172033;text-shadow:0 1px #fff;z-index:3}
+.gift .points{position:absolute;right:-2px;top:4px;background:#172033;color:white;border-radius:999px;padding:2px 6px;font-size:11px;font-weight:900;z-index:4}
+.gift.common .box,.gift.common .lid{background:#62b5ff}.gift.rare .box,.gift.rare .lid{background:#bd7cff}.gift.epic .box,.gift.epic .lid{background:#ffbd2e}
+.gift.selected{filter:drop-shadow(0 0 10px #fff) drop-shadow(0 0 14px #ffea00);transform:translate(-50%,-50%) scale(1.12)}
+.gift.pop{animation:pop .3s forwards}@keyframes pop{to{transform:translate(-50%,-50%) scale(1.7) rotate(15deg);opacity:0}}
+#target{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:4;background:#172033dd;color:white;border-radius:18px;padding:8px 14px;text-align:center;box-shadow:var(--shadow);min-width:170px}
+#target b{font-size:26px}.hint{font-size:12px;opacity:.85}
+#message{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);z-index:7;background:#fff;border-radius:22px;padding:18px 20px;text-align:center;box-shadow:var(--shadow);max-width:min(90%,420px);display:none}
+#message.show{display:block}
+footer{padding:8px 10px max(8px,env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr auto auto;gap:8px;background:#ffffffc9;backdrop-filter:blur(8px);z-index:5}
+#heard{min-width:0;background:#fff;border-radius:14px;padding:9px 11px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 2px 10px #0001}
+.action{border:0;border-radius:14px;padding:9px 13px;font-weight:900;box-shadow:0 4px 10px #0002;background:white;color:var(--ink)}
+#mic.listening{background:#ff5d6c;color:white;animation:pulse 1s infinite}@keyframes pulse{50%{transform:scale(1.05)}}
+#start{background:#2d8cff;color:#fff}
+.overlay{position:absolute;inset:0;z-index:10;background:linear-gradient(#83d2ff,#f9e7a8);display:flex;align-items:center;justify-content:center;padding:18px}
+.card{background:#fffc;border-radius:28px;padding:22px;box-shadow:var(--shadow);max-width:470px;width:100%;text-align:center}
+.card h1{margin:0 0 8px;font-size:30px}.card p{line-height:1.5;margin:8px 0}.legend{display:flex;justify-content:center;gap:8px;margin:14px 0;flex-wrap:wrap}.legend span{padding:6px 9px;border-radius:10px;color:white;font-weight:800}.blue{background:#62b5ff}.purple{background:#a85de7}.gold{background:#e8a000}
+.big{width:100%;border:0;border-radius:18px;padding:14px;background:#2d8cff;color:#fff;font-weight:900;font-size:19px}
+.small{font-size:12px;color:#5a6475}.danger{color:#b3261e}
+@media (max-width:600px){.gift{width:76px;height:72px}.gift .box{height:50px}.gift .char{font-size:28px}.brand{max-width:115px;white-space:normal;line-height:1}.pill{padding:5px 8px;font-size:12px}}
+</style>
+</head>
+<body>
+<div id="app">
+<header><div class="brand">🎁 中文禮物大作戰</div><div class="stats"><div class="pill">⭐ <span id="score">0</span></div><div class="pill">🔥 <span id="combo">0</span></div><div class="pill">❤️ <span id="lives">5</span></div><div class="pill">Lv.<span id="level">1</span></div></div></header>
+<main id="game">
+<div class="cloud" style="left:8%;top:13%"></div><div class="cloud" style="right:5%;top:28%;transform:scale(.7)"></div>
+<div id="target"><div class="hint">直接念出畫面上任何一個字</div><b id="targetChar">🎤 持續聆聽中</b></div>
+<div id="message"></div>
+<div class="overlay" id="intro"><div class="card">
+<h1>🎁 中文禮物大作戰</h1>
+<p>禮物正在從天空掉下來！<b>直接大聲念出畫面上任何一個中文字</b>，念對就能接住對應的禮物。</p>
+<div class="legend"><span class="blue">藍色 +10</span><span class="purple">紫色 +25</span><span class="gold">金色 +50</span></div>
+<p>越高分的禮物通常掉得越快。試著在很多禮物同時出現時，先搶金色禮物！</p>
+<button class="big" id="permissionStart">🎤 開啟麥克風並開始</button>
+<p class="small" id="supportNote">建議 iPhone / iPad 直接使用 Safari 開啟此頁，並允許麥克風與語音辨識權限。</p>
+</div></div>
+</main>
+<footer><div id="heard">🎤 尚未開始聆聽</div><button class="action" id="mic">🎙️ 重新開啟聆聽</button><button class="action" id="start">⏸ 暫停</button></footer>
+</div>
+<script>
+// DEMO WORD BANK.
+// 請將你合法取得的「康軒國語 1–3 年級」與「美洲華語二年級」生字表貼入對應陣列。
+// 遊戲邏輯已支援任意字庫；目前示範字只用常見基礎漢字，不宣稱等同任何課本完整字表。
+const WORD_BANK = {
+  "基礎示範": [..."一二三四五六七八九十人大小上下中日月山水火木土天你我他她好名字家爸爸媽媽哥哥姊姊弟弟妹妹朋友同學老師男女生們個有幾什麼的是叫喜歡想要來去看說吃喝手口耳目心花草雨風雲星學校書車門"],
+  "自訂追加": []
+};
+let words=[...new Set(Object.values(WORD_BANK).flat())];
+
+const game=document.querySelector("#game"), intro=document.querySelector("#intro"), heard=document.querySelector("#heard"),
+scoreEl=document.querySelector("#score"), comboEl=document.querySelector("#combo"), livesEl=document.querySelector("#lives"), levelEl=document.querySelector("#level"),
+targetChar=document.querySelector("#targetChar"), micBtn=document.querySelector("#mic"), pauseBtn=document.querySelector("#start"), msg=document.querySelector("#message");
+
+let score=0,combo=0,lives=5,level=1,running=false,last=0,spawnClock=0,gifts=[],recognizing=false;
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let recognition=null;
+let speechWanted=false;
+
+function normalize(s){return (s||"").replace(/[，。！？,.!?\s]/g,"").replace(/妳/g,"你");}
+
+function setupSpeech(){
+ if(!SR){
+   heard.innerHTML="⚠️ 此瀏覽器沒有提供 SpeechRecognition；目前無法使用免點擊喊字模式。";
+   micBtn.disabled=true;
+   return;
+ }
+ recognition=new SR();
+ recognition.lang="zh-TW";
+ recognition.interimResults=false;
+ recognition.continuous=false;
+ recognition.maxAlternatives=8;
+
+ recognition.onstart=()=>{
+   recognizing=true;
+   micBtn.classList.add("listening");
+   heard.textContent="🎤 正在聽…直接念畫面上的字";
+ };
+
+ recognition.onresult=e=>{
+   const alts=[...e.results[e.results.length-1]].map(x=>normalize(x.transcript)).filter(Boolean);
+   heard.textContent="👂 聽到："+(alts.join(" / ")||"（沒有辨識到）");
+
+   let matched=null;
+   // 優先接住高分禮物；若同一個字同時出現多次，先取分數最高，再取最低（最接近地面）的。
+   const sorted=[...gifts].sort((a,b)=>b.pts-a.pts || b.y-a.y);
+   outer:
+   for(const g of sorted){
+     for(const t of alts){
+       if(t.includes(g.char)){
+         matched=g;
+         break outer;
+       }
+     }
+   }
+
+   if(matched){
+     catchGift(matched,true);
+   }else{
+     combo=0;
+     comboEl.textContent=combo;
+     flash("沒有對到畫面上的字，再試一次！");
+   }
+ };
+
+ recognition.onerror=e=>{
+   if(e.error!=="no-speech" && e.error!=="aborted"){
+     heard.textContent="⚠️ 語音辨識："+e.error;
+   }
+ };
+
+ recognition.onend=()=>{
+   recognizing=false;
+   micBtn.classList.remove("listening");
+   if(speechWanted && running){
+     setTimeout(()=>startListening(),180);
+   }
+ };
+}
+
+async function requestMic(){
+ try{
+   if(navigator.mediaDevices?.getUserMedia){
+     const s=await navigator.mediaDevices.getUserMedia({audio:true});
+     s.getTracks().forEach(t=>t.stop());
+   }
+   return true;
+ }catch(e){
+   heard.textContent="⚠️ 麥克風未允許："+e.message;
+   return false;
+ }
+}
+
+function startListening(){
+ if(!SR || !recognition || recognizing || !speechWanted || !running) return;
+ try{
+   recognition.start();
+ }catch(e){
+   setTimeout(()=>{ if(speechWanted && running && !recognizing) startListening(); },300);
+ }
+}
+
+function stopListening(){
+ speechWanted=false;
+ if(recognizing && recognition){
+   try{recognition.abort()}catch(e){}
+ }
+}
+
+function flash(t,type="ok"){
+ msg.textContent=t;
+ msg.className="show";
+ setTimeout(()=>msg.className="",700);
+}
+
+function spawn(){
+ const roll=Math.random();
+ let type=roll>.88?"epic":roll>.60?"rare":"common";
+ const pts=type==="epic"?50:type==="rare"?25:10;
+ const char=words[Math.floor(Math.random()*words.length)];
+ const el=document.createElement("div");
+ el.className="gift "+type;
+ el.setAttribute("aria-label",char+"，"+pts+"分");
+ el.innerHTML=`<span class="bow"></span><span class="lid"></span><span class="box"></span><span class="ribbon"></span><span class="char">${char}</span><span class="points">+${pts}</span>`;
+ const rect=game.getBoundingClientRect();
+ const x=48+Math.random()*Math.max(10,rect.width-96);
+ const g={el,char,pts,type,x,y:-55,speed:(type==="epic"?58:type==="rare"?48:39)*(1+(level-1)*.08)};
+ el.style.left=x+"px";
+ el.style.top=g.y+"px";
+ game.appendChild(el);
+ gifts.push(g);
+}
+
+function catchGift(g){
+ if(!gifts.includes(g))return;
+ score+=g.pts+Math.min(combo*2,20);
+ combo++;
+ scoreEl.textContent=score;
+ comboEl.textContent=combo;
+ g.el.classList.add("pop");
+ setTimeout(()=>g.el.remove(),250);
+ gifts=gifts.filter(x=>x!==g);
+ flash("接到「"+g.char+"」！ +"+g.pts);
+ if(score>=level*250){
+   level++;
+   levelEl.textContent=level;
+   flash("升級！Level "+level+" 🎉");
+ }
+}
+
+function miss(g){
+ g.el.remove();
+ gifts=gifts.filter(x=>x!==g);
+ lives--;
+ combo=0;
+ livesEl.textContent=lives;
+ comboEl.textContent=0;
+ if(lives<=0)endGame();
+}
+
+function endGame(){
+ running=false;
+ stopListening();
+ flash("遊戲結束！得到 "+score+" 分 🎉");
+ setTimeout(()=>{
+   lives=5;score=0;combo=0;level=1;
+   [livesEl,scoreEl,comboEl,levelEl].forEach((e,i)=>e.textContent=[5,0,0,1][i]);
+   gifts.forEach(g=>g.el.remove());
+   gifts=[];
+   intro.style.display="flex";
+ },1200);
+}
+
+function loop(t){
+ if(running){
+   const dt=Math.min((t-last)/1000,.05);
+   spawnClock+=dt;
+   const interval=Math.max(.72,1.65-level*.09);
+   if(spawnClock>interval){spawn();spawnClock=0}
+   const h=game.clientHeight;
+   [...gifts].forEach(g=>{
+     g.y+=g.speed*dt;
+     g.el.style.top=g.y+"px";
+     if(g.y>h+50)miss(g);
+   });
+ }
+ last=t;
+ requestAnimationFrame(loop);
+}
+document.querySelector("#permissionStart").onclick=async()=>{
+  const ok=await requestMic();
+  intro.style.display="none";
+  running=true;
+  speechWanted=ok;
+  last=performance.now();
+  if(!recognition)setupSpeech();
+  if(ok) setTimeout(startListening,150);
+};
+micBtn.onclick=async()=>{
+  if(!speechWanted){
+    const ok=await requestMic();
+    speechWanted=ok;
+  }
+  if(running) startListening();
+};
+pauseBtn.onclick=()=>{
+  running=!running;
+  pauseBtn.textContent=running?"⏸ 暫停":"▶️ 繼續";
+  if(running){
+    speechWanted=true;
+    startListening();
+  }else{
+    if(recognizing && recognition){try{recognition.abort()}catch(e){}}
+  }
+};
+setupSpeech();requestAnimationFrame(loop);
+</script>
+</body></html>

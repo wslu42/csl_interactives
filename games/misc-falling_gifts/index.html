@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#fff4d8">
-<title>中文禮物大作戰</title>
+<title>中文禮物大作戰 V4</title>
 <style>
 :root{--ink:#24324a;--paper:#fffaf0;--panel:#ffffffd9;--shadow:0 12px 35px #57431e22}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -30,7 +30,7 @@ header{display:flex;gap:8px;align-items:center;padding:max(8px,env(safe-area-ins
 .gift.pop{animation:pop .3s forwards}@keyframes pop{to{transform:translate(-50%,-50%) scale(1.7) rotate(15deg);opacity:0}}
 #target{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:4;background:#172033dd;color:white;border-radius:18px;padding:8px 14px;text-align:center;box-shadow:var(--shadow);min-width:170px}
 #target b{font-size:26px}.hint{font-size:12px;opacity:.85}
-#message{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);z-index:7;background:#fff;border-radius:22px;padding:18px 20px;text-align:center;box-shadow:var(--shadow);max-width:min(90%,420px);display:none}
+#message{pointer-events:none;position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);z-index:7;background:#fff;border-radius:22px;padding:18px 20px;text-align:center;box-shadow:var(--shadow);max-width:min(90%,420px);display:none}
 #message.show{display:block}
 footer{padding:8px 10px max(8px,env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr auto auto;gap:8px;background:#ffffffc9;backdrop-filter:blur(8px);z-index:5}
 #heard{min-width:0;background:#fff;border-radius:14px;padding:9px 11px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 2px 10px #0001}
@@ -47,7 +47,7 @@ footer{padding:8px 10px max(8px,env(safe-area-inset-bottom));display:grid;grid-t
 </head>
 <body>
 <div id="app">
-<header><div class="brand">🎁 中文禮物大作戰</div><div class="stats"><div class="pill">⭐ <span id="score">0</span></div><div class="pill">🔥 <span id="combo">0</span></div><div class="pill">❤️ <span id="lives">5</span></div><div class="pill">Lv.<span id="level">1</span></div></div></header>
+<header><div class="brand">🎁 中文禮物大作戰 <small style="font-size:10px">V4</small></div><div class="stats"><div class="pill">⭐ <span id="score">0</span></div><div class="pill">🔥 <span id="combo">0</span></div><div class="pill">❤️ <span id="lives">10</span></div><div class="pill">Lv.<span id="level">1</span></div></div></header>
 <main id="game">
 <div class="cloud" style="left:8%;top:13%"></div><div class="cloud" style="right:5%;top:28%;transform:scale(.7)"></div>
 <div id="target"><div class="hint">直接念出畫面上任何一個字</div><b id="targetChar">🎤 持續聆聽中</b></div>
@@ -57,8 +57,17 @@ footer{padding:8px 10px max(8px,env(safe-area-inset-bottom));display:grid;grid-t
 <p>禮物正在從天空掉下來！<b>直接大聲念出畫面上任何一個中文字</b>，念對就能接住對應的禮物。</p>
 <div class="legend"><span class="blue">藍色 +10</span><span class="purple">紫色 +25</span><span class="gold">金色 +50</span></div>
 <p>越高分的禮物通常掉得越快。試著在很多禮物同時出現時，先搶金色禮物！</p>
-<button class="big" id="permissionStart">🎤 開啟麥克風並開始</button>
-<p class="small" id="supportNote">建議 iPhone / iPad 直接使用 Safari 開啟此頁，並允許麥克風與語音辨識權限。</p>
+<div id="micCheck" style="margin:14px 0;text-align:left;background:#f4f7fb;border-radius:16px;padding:12px">
+<b>🎤 iPhone / iPad 麥克風檢查</b>
+<div id="envStatus" class="small" style="margin-top:6px">正在檢查瀏覽器…</div>
+<div style="height:12px;background:#dfe5ee;border-radius:999px;overflow:hidden;margin:8px 0"><div id="micLevel" style="height:100%;width:0%;background:#35a853;transition:width .08s"></div></div>
+<div id="micStatus" class="small">先測試麥克風。說話時綠色音量條有動，才代表網頁真的收到聲音。</div>
+<button class="action" id="testMic" style="margin-top:8px">① 測試麥克風</button>
+<button class="action" id="testSpeech" style="margin-top:8px">② 測試中文辨識</button>
+<div id="speechTestResult" class="small" style="margin-top:8px">尚未測試語音辨識</div>
+</div>
+<button class="big" id="permissionStart">③ 開始遊戲</button>
+<p class="small" id="supportNote">iPhone / iPad 請直接用 Safari 開啟 GitHub Pages 網址，不要用 App 內建瀏覽器。請先完成上方兩個測試。</p>
 </div></div>
 </main>
 <footer><div id="heard">🎤 尚未開始聆聽</div><button class="action" id="mic">🎙️ 重新開啟聆聽</button><button class="action" id="start">⏸ 暫停</button></footer>
@@ -77,7 +86,7 @@ const game=document.querySelector("#game"), intro=document.querySelector("#intro
 scoreEl=document.querySelector("#score"), comboEl=document.querySelector("#combo"), livesEl=document.querySelector("#lives"), levelEl=document.querySelector("#level"),
 targetChar=document.querySelector("#targetChar"), micBtn=document.querySelector("#mic"), pauseBtn=document.querySelector("#start"), msg=document.querySelector("#message");
 
-let score=0,combo=0,lives=5,level=1,running=false,last=0,spawnClock=0,gifts=[],recognizing=false;
+let score=0,combo=0,lives=10,level=1,running=false,last=0,spawnClock=0,gifts=[],recognizing=false;
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let recognition=null;
 let speechWanted=false;
@@ -92,7 +101,7 @@ function setupSpeech(){
  }
  recognition=new SR();
  recognition.lang="zh-TW";
- recognition.interimResults=false;
+ recognition.interimResults=true;
  recognition.continuous=false;
  recognition.maxAlternatives=8;
 
@@ -102,32 +111,34 @@ function setupSpeech(){
    heard.textContent="🎤 正在聽…直接念畫面上的字";
  };
 
+ recognition.onaudiostart=()=>{heard.textContent="🔊 音訊已進入辨識器…";};
+ recognition.onsoundstart=()=>{heard.textContent="🔊 聽到聲音…";};
+ recognition.onspeechstart=()=>{heard.textContent="🗣️ 聽到人聲，辨識中…";};
  recognition.onresult=e=>{
-   const alts=[...e.results[e.results.length-1]].map(x=>normalize(x.transcript)).filter(Boolean);
-   heard.textContent="👂 聽到："+(alts.join(" / ")||"（沒有辨識到）");
-
-   let matched=null;
-   // 優先接住高分禮物；若同一個字同時出現多次，先取分數最高，再取最低（最接近地面）的。
-   const sorted=[...gifts].sort((a,b)=>b.pts-a.pts || b.y-a.y);
-   outer:
-   for(const g of sorted){
-     for(const t of alts){
-       if(t.includes(g.char)){
-         matched=g;
-         break outer;
-       }
+   const hypotheses=[];
+   for(let i=e.resultIndex;i<e.results.length;i++){
+     const result=e.results[i];
+     for(let j=0;j<result.length;j++){
+       const t=normalize(result[j].transcript);
+       if(t) hypotheses.push(t);
      }
    }
+   if(!hypotheses.length) return;
 
-   if(matched){
-     catchGift(matched,true);
-   }else{
-     combo=0;
-     comboEl.textContent=combo;
-     flash("沒有對到畫面上的字，再試一次！");
+   heard.textContent="👂 "+hypotheses.join(" / ");
+
+   // Match immediately, including non-final (interim) hypotheses.
+   // If several gifts match, prefer higher score, then the one closest to the ground.
+   const sorted=[...gifts].sort((a,b)=>b.pts-a.pts || b.y-a.y);
+   let matched=null;
+   outer:
+   for(const g of sorted){
+     for(const t of hypotheses){
+       if(t.includes(g.char)){matched=g;break outer;}
+     }
    }
+   if(matched) catchGift(matched);
  };
-
  recognition.onerror=e=>{
    if(e.error!=="no-speech" && e.error!=="aborted"){
      heard.textContent="⚠️ 語音辨識："+e.error;
@@ -179,21 +190,19 @@ function flash(t,type="ok"){
 }
 
 function spawn(){
- const roll=Math.random();
- let type=roll>.88?"epic":roll>.60?"rare":"common";
+ const roll=Math.random(); let type=roll>.88?"epic":roll>.60?"rare":"common";
  const pts=type==="epic"?50:type==="rare"?25:10;
  const char=words[Math.floor(Math.random()*words.length)];
- const el=document.createElement("div");
- el.className="gift "+type;
- el.setAttribute("aria-label",char+"，"+pts+"分");
+ const el=document.createElement("div"); el.className="gift "+type; el.setAttribute("aria-label",char+"，"+pts+"分");
  el.innerHTML=`<span class="bow"></span><span class="lid"></span><span class="box"></span><span class="ribbon"></span><span class="char">${char}</span><span class="points">+${pts}</span>`;
  const rect=game.getBoundingClientRect();
- const x=48+Math.random()*Math.max(10,rect.width-96);
- const g={el,char,pts,type,x,y:-55,speed:(type==="epic"?58:type==="rare"?48:39)*(1+(level-1)*.08)};
- el.style.left=x+"px";
- el.style.top=g.y+"px";
- game.appendChild(el);
- gifts.push(g);
+ const laneCount=rect.width<520?4:6, laneW=rect.width/laneCount;
+ const free=[...Array(laneCount).keys()].filter(l=>!gifts.some(g=>g.lane===l&&g.y<155));
+ const pool=free.length?free:[...Array(laneCount).keys()];
+ const lane=pool[Math.floor(Math.random()*pool.length)];
+ const x=Math.max(42,Math.min(rect.width-42,(lane+.5)*laneW+(Math.random()-.5)*Math.min(14,laneW*.15)));
+ const g={el,char,pts,type,lane,x,y:-55,speed:(type==="epic"?34:type==="rare"?30:26)*(1+(level-1)*.045)};
+ el.style.left=x+"px"; el.style.top=g.y+"px"; game.appendChild(el); gifts.push(g);
 }
 
 function catchGift(g){
@@ -202,14 +211,17 @@ function catchGift(g){
  combo++;
  scoreEl.textContent=score;
  comboEl.textContent=combo;
- g.el.classList.add("pop");
- setTimeout(()=>g.el.remove(),250);
+
+ // Remove immediately from game state and visually disappear at once.
  gifts=gifts.filter(x=>x!==g);
- flash("接到「"+g.char+"」！ +"+g.pts);
+ g.el.style.transition="opacity .10s ease, transform .10s ease";
+ g.el.style.opacity="0";
+ g.el.style.transform="translate(-50%,-50%) scale(.72)";
+ setTimeout(()=>g.el.remove(),110);
+
  if(score>=level*250){
    level++;
    levelEl.textContent=level;
-   flash("升級！Level "+level+" 🎉");
  }
 }
 
@@ -228,8 +240,8 @@ function endGame(){
  stopListening();
  flash("遊戲結束！得到 "+score+" 分 🎉");
  setTimeout(()=>{
-   lives=5;score=0;combo=0;level=1;
-   [livesEl,scoreEl,comboEl,levelEl].forEach((e,i)=>e.textContent=[5,0,0,1][i]);
+   lives=10;score=0;combo=0;level=1;
+   [livesEl,scoreEl,comboEl,levelEl].forEach((e,i)=>e.textContent=[10,0,0,1][i]);
    gifts.forEach(g=>g.el.remove());
    gifts=[];
    intro.style.display="flex";
@@ -240,7 +252,7 @@ function loop(t){
  if(running){
    const dt=Math.min((t-last)/1000,.05);
    spawnClock+=dt;
-   const interval=Math.max(.72,1.65-level*.09);
+   const interval=Math.max(1.35,2.75-level*.07);
    if(spawnClock>interval){spawn();spawnClock=0}
    const h=game.clientHeight;
    [...gifts].forEach(g=>{
@@ -252,7 +264,54 @@ function loop(t){
  last=t;
  requestAnimationFrame(loop);
 }
+
+// Mobile diagnostics: distinguish "permission granted" from "audio actually arrives"
+// and from "speech service returns a transcript".
+const envStatus=document.querySelector("#envStatus"), micStatus=document.querySelector("#micStatus"),
+micLevel=document.querySelector("#micLevel"), speechTestResult=document.querySelector("#speechTestResult"),
+testMicBtn=document.querySelector("#testMic"), testSpeechBtn=document.querySelector("#testSpeech");
+let testStream=null,audioCtx=null,meterRAF=null;
+const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+const isSafari=/Safari/.test(navigator.userAgent)&&!/CriOS|FxiOS|EdgiOS/.test(navigator.userAgent);
+envStatus.textContent=`裝置：${isiOS?"iPhone/iPad":"非 iOS"} ｜ ${isSafari?"Safari":"其他瀏覽器"} ｜ HTTPS：${location.protocol==="https:"?"是":"否"} ｜ 語音辨識 API：${SR?"有":"沒有"}`;
+
+async function stopMicMeter(){
+ if(meterRAF)cancelAnimationFrame(meterRAF); meterRAF=null;
+ if(testStream){testStream.getTracks().forEach(t=>t.stop());testStream=null;}
+ if(audioCtx){try{await audioCtx.close()}catch(e){}audioCtx=null;}
+ micLevel.style.width="0%";
+}
+testMicBtn.onclick=async()=>{
+ await stopMicMeter();
+ try{
+  testStream=await navigator.mediaDevices.getUserMedia({audio:true});
+  const AC=window.AudioContext||window.webkitAudioContext; audioCtx=new AC(); await audioCtx.resume();
+  const src=audioCtx.createMediaStreamSource(testStream),an=audioCtx.createAnalyser();an.fftSize=512;src.connect(an);
+  const data=new Uint8Array(an.fftSize);let peak=0;
+  const draw=()=>{an.getByteTimeDomainData(data);let sum=0;for(const v of data){const x=(v-128)/128;sum+=x*x}
+   const pct=Math.min(100,Math.max(2,Math.sqrt(sum/data.length)*430));peak=Math.max(peak,pct);micLevel.style.width=pct+"%";
+   micStatus.textContent=peak>12?"✅ 網頁確實收到麥克風聲音。下一步測試中文辨識。":"🎤 已開啟。請說話，看綠色音量條是否明顯移動。";
+   meterRAF=requestAnimationFrame(draw);};draw();
+ }catch(e){micStatus.textContent="❌ 麥克風失敗："+e.name+" — "+e.message;}
+};
+testSpeechBtn.onclick=async()=>{
+ await stopMicMeter();
+ if(!SR){speechTestResult.textContent="❌ 這個瀏覽器沒有 SpeechRecognition API。";return;}
+ speechTestResult.textContent="🎤 請清楚說「你好」…";
+ const r=new SR();r.lang="zh-TW";r.interimResults=true;r.continuous=false;r.maxAlternatives=5;
+ let sound=false,speech=false,done=false;
+ const timer=setTimeout(()=>{if(!done){done=true;try{r.abort()}catch(e){}speechTestResult.textContent=sound?"⚠️ 有收到聲音，但語音服務沒有回傳文字。":"⚠️ 辨識器啟動了，但沒有偵測到聲音。";}},7000);
+ r.onaudiostart=()=>{sound=true;speechTestResult.textContent="🔊 辨識器收到音訊，請說「你好」…"};
+ r.onsoundstart=()=>{sound=true;speechTestResult.textContent="🔊 偵測到聲音…"};
+ r.onspeechstart=()=>{speech=true;speechTestResult.textContent="🗣️ 偵測到人聲，正在辨識…"};
+ r.onresult=e=>{done=true;clearTimeout(timer);let out=[];for(let i=e.resultIndex;i<e.results.length;i++)for(let j=0;j<e.results[i].length;j++)out.push(e.results[i][j].transcript);speechTestResult.textContent="✅ 中文辨識成功："+out.join(" / ");try{r.stop()}catch(e){}};
+ r.onerror=e=>{done=true;clearTimeout(timer);speechTestResult.textContent="❌ 辨識錯誤："+e.error+(e.message?" — "+e.message:"")};
+ r.onend=()=>{if(!done){done=true;clearTimeout(timer);speechTestResult.textContent=`⚠️ 辨識結束但沒有文字（聲音：${sound?"有":"無"}；人聲：${speech?"有":"無"}）`;}};
+ try{r.start()}catch(e){done=true;clearTimeout(timer);speechTestResult.textContent="❌ 無法啟動辨識："+e.message;}
+};
+
 document.querySelector("#permissionStart").onclick=async()=>{
+  await stopMicMeter();
   const ok=await requestMic();
   intro.style.display="none";
   running=true;

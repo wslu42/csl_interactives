@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#fff4d8">
-<title>中文禮物大作戰 V4</title>
+<title>中文禮物大作戰 V5</title>
 <style>
 :root{--ink:#24324a;--paper:#fffaf0;--panel:#ffffffd9;--shadow:0 12px 35px #57431e22}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -47,10 +47,10 @@ footer{padding:8px 10px max(8px,env(safe-area-inset-bottom));display:grid;grid-t
 </head>
 <body>
 <div id="app">
-<header><div class="brand">🎁 中文禮物大作戰 <small style="font-size:10px">V4</small></div><div class="stats"><div class="pill">⭐ <span id="score">0</span></div><div class="pill">🔥 <span id="combo">0</span></div><div class="pill">❤️ <span id="lives">10</span></div><div class="pill">Lv.<span id="level">1</span></div></div></header>
+<header><div class="brand">🎁 中文禮物大作戰 <small style="font-size:10px">V5</small></div><div class="stats"><div class="pill">⭐ <span id="score">0</span></div><div class="pill">🔥 <span id="combo">0</span></div><div class="pill">❤️ <span id="lives">10</span></div><div class="pill">Lv.<span id="level">1</span></div></div></header>
 <main id="game">
 <div class="cloud" style="left:8%;top:13%"></div><div class="cloud" style="right:5%;top:28%;transform:scale(.7)"></div>
-<div id="target"><div class="hint">直接念出畫面上任何一個字</div><b id="targetChar">🎤 持續聆聽中</b></div>
+<div id="target"><div class="hint">直接念字・同音同調也算正確</div><b id="targetChar">🎤 持續聆聽中</b></div>
 <div id="message"></div>
 <div class="overlay" id="intro"><div class="card">
 <h1>🎁 中文禮物大作戰</h1>
@@ -81,6 +81,23 @@ const WORD_BANK = {
   "自訂追加": []
 };
 let words=[...new Set(Object.values(WORD_BANK).flat())];
+const PRONUNCIATION={
+"一":["yī"],"二":["èr"],"三":["sān"],"四":["sì"],"五":["wǔ"],"六":["liù"],"七":["qī"],"八":["bā"],"九":["jiǔ"],"十":["shí"],
+"人":["rén"],"大":["dà"],"小":["xiǎo"],"上":["shàng"],"下":["xià"],"中":["zhōng"],"日":["rì"],"月":["yuè"],"山":["shān"],"水":["shuǐ"],"火":["huǒ"],"木":["mù"],"土":["tǔ"],"天":["tiān"],
+"你":["nǐ"],"我":["wǒ"],"他":["tā"],"她":["tā"],"好":["hǎo"],"名":["míng"],"字":["zì"],"家":["jiā"],"爸":["bà"],"媽":["mā"],"哥":["gē"],"姊":["zǐ"],"弟":["dì"],"妹":["mèi"],
+"朋":["péng"],"友":["yǒu"],"同":["tóng"],"學":["xué"],"老":["lǎo"],"師":["shī"],"男":["nán"],"女":["nǚ"],"生":["shēng"],"們":["men"],"個":["ge"],"有":["yǒu"],"幾":["jǐ"],"什":["shén"],"麼":["me"],"的":["de"],"是":["shì"],"叫":["jiào"],
+"喜":["xǐ"],"歡":["huān"],"想":["xiǎng"],"要":["yào"],"來":["lái"],"去":["qù"],"看":["kàn"],"說":["shuō"],"吃":["chī"],"喝":["hē"],"手":["shǒu"],"口":["kǒu"],"耳":["ěr"],"目":["mù"],"心":["xīn"],"花":["huā"],"草":["cǎo"],"雨":["yǔ"],"風":["fēng"],"雲":["yún"],"星":["xīng"],"校":["xiào"],"書":["shū"],"車":["chē"],"門":["mén"],
+"久":["jiǔ"],"酒":["jiǔ"],"玖":["jiǔ"],"再":["zài"],"在":["zài"],"事":["shì"],"市":["shì"],"室":["shì"],"試":["shì"],"得":["de","dé","děi"],"地":["de","dì"],"仁":["rén"],
+"長":["cháng","zhǎng"],"行":["xíng","háng"],"樂":["lè","yuè"],"還":["hái","huán"]
+};
+function readingsOfText(text){
+ const out=[]; for(const ch of [...normalize(text)]) if(PRONUNCIATION[ch]) out.push(...PRONUNCIATION[ch]);
+ return [...new Set(out)];
+}
+function samePronunciation(text,target){
+ const a=readingsOfText(text),b=PRONUNCIATION[target]||[];
+ return a.some(x=>b.includes(x));
+}
 
 const game=document.querySelector("#game"), intro=document.querySelector("#intro"), heard=document.querySelector("#heard"),
 scoreEl=document.querySelector("#score"), comboEl=document.querySelector("#combo"), livesEl=document.querySelector("#lives"), levelEl=document.querySelector("#level"),
@@ -117,27 +134,19 @@ function setupSpeech(){
  recognition.onresult=e=>{
    const hypotheses=[];
    for(let i=e.resultIndex;i<e.results.length;i++){
-     const result=e.results[i];
-     for(let j=0;j<result.length;j++){
-       const t=normalize(result[j].transcript);
-       if(t) hypotheses.push(t);
+     for(let j=0;j<e.results[i].length;j++){
+       const t=normalize(e.results[i][j].transcript); if(t) hypotheses.push(t);
      }
    }
-   if(!hypotheses.length) return;
-
+   if(!hypotheses.length)return;
    heard.textContent="👂 "+hypotheses.join(" / ");
-
-   // Match immediately, including non-final (interim) hypotheses.
-   // If several gifts match, prefer higher score, then the one closest to the ground.
-   const sorted=[...gifts].sort((a,b)=>b.pts-a.pts || b.y-a.y);
+   const sorted=[...gifts].sort((a,b)=>b.pts-a.pts||b.y-a.y);
    let matched=null;
-   outer:
-   for(const g of sorted){
-     for(const t of hypotheses){
-       if(t.includes(g.char)){matched=g;break outer;}
-     }
-   }
-   if(matched) catchGift(matched);
+   // 1. Exact character first.
+   exact: for(const g of sorted)for(const t of hypotheses)if(t.includes(g.char)){matched=g;break exact;}
+   // 2. Otherwise accept same pronunciation WITH the same tone.
+   if(!matched) homophone: for(const g of sorted)for(const t of hypotheses)if(samePronunciation(t,g.char)){matched=g;break homophone;}
+   if(matched)catchGift(matched);
  };
  recognition.onerror=e=>{
    if(e.error!=="no-speech" && e.error!=="aborted"){

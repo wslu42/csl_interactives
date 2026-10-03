@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#9edcff">
+<title>中文寫字禮物大作戰</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--ink:#26354d}
+html,body{margin:0;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:linear-gradient(#8ed8ff 0 66%,#c9efaa 66%)}
+.portal-return{display:block;text-align:center;padding:7px 10px;color:#174f8a;font-weight:800;background:#fff;text-decoration:none}
+button:focus-visible,input:focus-visible,a:focus-visible,canvas:focus-visible{outline:3px solid #174f8a;outline-offset:3px}
+header{flex-wrap:wrap}.overlay{overflow-y:auto}.card{margin:auto}
+@media(max-height:600px){.card{padding:12px}.card h1{font-size:22px}.choices{margin:8px 0}.choice{padding:8px}.card p{margin:8px 0}}
+@media(prefers-reduced-motion:reduce){.gift{transition:none!important}}
+button,input{font:inherit}button{cursor:pointer}
+#app{height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
+header{display:flex;align-items:center;gap:8px;padding:max(7px,env(safe-area-inset-top)) 10px 7px;background:#ffffffd0;backdrop-filter:blur(8px);z-index:5}
+.brand{font-weight:900;font-size:clamp(15px,3.5vw,22px);margin-right:auto}.collect{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.counter{background:#fff;border-radius:999px;padding:5px 9px;font-weight:900;box-shadow:0 2px 8px #0001;font-size:13px}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:3px}.b{background:#62b5ff}.p{background:#ad6bea}.g{background:#f2b51d}
+#game{position:relative;overflow:hidden}.cloud{position:absolute;width:100px;height:28px;background:#fff8;border-radius:999px}.cloud:before,.cloud:after{content:"";position:absolute;background:inherit;border-radius:50%;width:43px;height:43px;top:-17px}.cloud:before{left:14px}.cloud:after{right:12px}
+#timer{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:4;background:#24324ae8;color:#fff;border-radius:999px;padding:6px 13px;font-weight:900}
+.gift{position:absolute;width:92px;height:86px;transform:translate(-50%,-50%);filter:drop-shadow(0 7px 5px #0003)}
+.gift .box{position:absolute;left:7px;right:7px;bottom:4px;height:58px;border-radius:8px;border:4px solid #fff8}.gift .lid{position:absolute;left:2px;right:2px;top:14px;height:19px;border-radius:7px;border:3px solid #fff8}.gift .ribbon{position:absolute;width:14px;height:60px;left:39px;bottom:4px;background:#fff8}
+.gift .bow:before,.gift .bow:after{content:"";position:absolute;top:2px;width:28px;height:22px;border:7px solid #fff8;border-radius:50%}.gift .bow:before{left:14px;transform:rotate(20deg)}.gift .bow:after{right:14px;transform:scaleX(-1) rotate(20deg)}
+.gift .char{position:absolute;inset:28px 7px 4px;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:900;color:#172033;text-shadow:0 1px #fff;z-index:3}.gift .points{position:absolute;right:-3px;top:4px;background:#172033;color:#fff;border-radius:999px;padding:2px 6px;font-size:11px;font-weight:900;z-index:4}
+.common .box,.common .lid{background:#62b5ff}.rare .box,.rare .lid{background:#ad6bea}.epic .box,.epic .lid{background:#f2b51d}
+footer{background:#ffffffdf;backdrop-filter:blur(9px);padding:8px 10px max(8px,env(safe-area-inset-bottom));z-index:5}
+#typingPanel{display:flex;gap:8px;max-width:650px;margin:auto}.answer{flex:1;min-width:0;border:2px solid #d8e0ec;border-radius:16px;padding:12px 14px;font-size:22px;background:#fff}.submit{border:0;border-radius:16px;padding:10px 17px;background:#2d8cff;color:#fff;font-weight:900}
+#handPanel{max-width:650px;margin:auto;display:none}.handrow{display:grid;grid-template-columns:1fr auto;gap:8px}
+#pad{width:100%;height:155px;background:#fff;border:2px dashed #aab8cc;border-radius:18px;touch-action:none}.handBtns{display:flex;flex-direction:column;gap:7px}.smallBtn{border:0;border-radius:13px;padding:10px;background:#fff;font-weight:800;box-shadow:0 2px 8px #0001}#handStatus{font-size:12px;margin-top:5px;text-align:center}
+.overlay{position:absolute;inset:0;z-index:20;background:linear-gradient(#8bd5ff,#ffe6a2);display:flex;align-items:center;justify-content:center;padding:18px}.card{width:min(470px,100%);background:#fffffff2;border-radius:28px;padding:22px;text-align:center;box-shadow:0 18px 55px #34445a35}.card h1{margin:0 0 7px}.card p{line-height:1.5}.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:17px 0}.choice{border:2px solid #d8e2ee;background:#fff;border-radius:20px;padding:17px 8px;font-weight:900;font-size:17px}.choice.selected{border-color:#2d8cff;background:#eef6ff}.big{width:100%;border:0;border-radius:18px;padding:14px;background:#2d8cff;color:#fff;font-weight:900;font-size:18px}.note{font-size:12px;color:#657086}.resultRows{display:flex;justify-content:center;gap:10px;margin:18px 0;flex-wrap:wrap}.resultBox{background:#f4f7fb;border-radius:16px;padding:10px 14px;font-weight:900}.scoreBig{font-size:42px;font-weight:1000;margin:8px 0}.honor{font-size:21px;font-weight:900}
+@media(max-width:520px){.gift{width:82px;height:77px}.gift .char{font-size:30px}.counter{font-size:12px;padding:4px 7px}.brand{max-width:105px;line-height:1.05}.choices{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="app">
+<header><div class="brand">✍️ 中文寫字禮物大作戰</div><div class="collect" role="status" aria-live="polite" aria-label="禮物收藏與分數">
+<div class="counter"><i class="dot b"></i>× <span id="blueN">0</span></div><div class="counter"><i class="dot p"></i>× <span id="purpleN">0</span></div><div class="counter"><i class="dot g"></i>× <span id="goldN">0</span></div><div class="counter">分數 <span id="score">0</span></div>
+</div></header>
+<main id="game">
+<div class="cloud" style="left:7%;top:18%"></div><div class="cloud" style="right:7%;top:35%;transform:scale(.7)"></div><div id="timer">⏱ 2:00</div>
+<div class="overlay" id="intro"><div class="card"><h1>🎁 寫字拿禮物！</h1><p>看到掉下來的中文字，就把它<strong>打出來或寫出來</strong>。答對後禮物立刻收進收藏！</p>
+<div class="choices"><button class="choice selected" data-mode="type">⌨️<br>打字輸入</button><button class="choice" data-mode="hand">✍️<br>手寫辨認</button></div>
+<p class="note" id="modeNote">打字模式：用中文鍵盤輸入畫面上的字。</p><button class="big" id="begin">開始遊戲</button></div></div>
+<div class="overlay" id="result" style="display:none"><div class="card"><div style="font-size:52px">🏆</div><div class="honor" id="honor">寫字小高手！</div><div class="scoreBig" id="finalScore">0</div><div>分</div>
+<div class="resultRows"><div class="resultBox"><i class="dot b"></i>× <span id="rb">0</span></div><div class="resultBox"><i class="dot p"></i>× <span id="rp">0</span></div><div class="resultBox"><i class="dot g"></i>× <span id="rg">0</span></div></div>
+<p id="resultText"></p><button class="big" id="again">🎮 再玩一次</button></div></div>
+</main>
+<footer>
+<a class="portal-return" href="../../">← 返回入口</a>
+<div id="typingPanel"><input id="answer" class="answer" aria-label="輸入畫面上的中文字" lang="zh-Hant" inputmode="text" autocomplete="off" autocorrect="off" placeholder="輸入畫面上的字"><button id="submit" class="submit">送出</button></div>
+<div id="handPanel"><div class="handrow"><canvas id="pad" aria-label="手寫一個中文字" tabindex="0"></canvas><div class="handBtns"><button class="smallBtn" id="clear">清除</button><button class="smallBtn" id="recognize">辨認</button></div></div><div id="handStatus" role="status" aria-live="polite">在白色區域寫一個字</div></div>
+</footer></div>
+<script>
+const WORDS=[..."一二三四五六七八九十人大小上下中日月山水火木土天你我他她好名字家爸爸媽媽哥哥姊姊弟弟妹妹朋友同學老師男女生們個有幾什麼的是叫喜歡想要來去看說吃喝手口耳目心花草雨風雲星學校書車門"];
+const game=document.querySelector("#game"),answer=document.querySelector("#answer"),typingPanel=document.querySelector("#typingPanel"),handPanel=document.querySelector("#handPanel"),scoreEl=document.querySelector("#score"),blueEl=document.querySelector("#blueN"),purpleEl=document.querySelector("#purpleN"),goldEl=document.querySelector("#goldN"),timerEl=document.querySelector("#timer");
+const handChoice=document.querySelector('[data-mode="hand"]');
+const hasHandwriting=typeof navigator.createHandwritingRecognizer==="function"&&typeof HandwritingStroke==="function";
+if(!hasHandwriting){handChoice.disabled=true;handChoice.innerHTML="✍️<br>手寫辨認（此瀏覽器不支援）";document.querySelector("#modeNote").textContent="打字模式可使用中文鍵盤；iPhone/iPad 也可切換系統中文手寫鍵盤。網頁手寫辨認在此瀏覽器不可用。";}
+let mode="type",running=false,gifts=[],score=0,counts={common:0,rare:0,epic:0},startTime=0,last=0,spawnClock=0;
+const GAME_SECONDS=120,MAX_GIFTS=2;
+const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)");
+document.querySelectorAll(".choice").forEach(b=>b.onclick=()=>{document.querySelectorAll(".choice").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");mode=b.dataset.mode;document.querySelector("#modeNote").textContent=mode==="type"?"打字模式：用中文鍵盤輸入畫面上的字。":"手寫模式（實驗）：需瀏覽器支援繁體中文辨認模型；無法使用時請改用打字模式。";});
+function reset(){gifts.forEach(g=>g.el.remove());gifts=[];score=0;counts={common:0,rare:0,epic:0};scoreEl.textContent=blueEl.textContent=purpleEl.textContent=goldEl.textContent=0;spawnClock=99;answer.value="";timerEl.textContent="⏱ 2:00";clearPad()}
+document.querySelector("#begin").onclick=()=>{reset();document.querySelector("#intro").style.display="none";typingPanel.style.display=mode==="type"?"flex":"none";handPanel.style.display=mode==="hand"?"block":"none";if(mode==="hand")sizeCanvas();running=true;startTime=performance.now();last=startTime;if(mode==="type")setTimeout(()=>answer.focus(),100);};
+function spawn(){if(gifts.length>=MAX_GIFTS)return;const r=Math.random(),type=r>.88?"epic":r>.60?"rare":"common",pts=type==="epic"?50:type==="rare"?25:10,char=WORDS[Math.floor(Math.random()*WORDS.length)];
+const el=document.createElement("div");el.className="gift "+type;el.innerHTML=`<span class="bow"></span><span class="lid"></span><span class="box"></span><span class="ribbon"></span><span class="char">${char}</span><span class="points">+${pts}</span>`;
+const rect=game.getBoundingClientRect(),laneCount=rect.width<520?3:5,laneW=rect.width/laneCount,occupied=new Set(gifts.filter(g=>g.y<220).map(g=>g.lane)),free=[...Array(laneCount).keys()].filter(x=>!occupied.has(x)),pool=free.length?free:[...Array(laneCount).keys()],lane=pool[Math.floor(Math.random()*pool.length)],x=(lane+.5)*laneW;
+const g={el,char,type,pts,lane,x,y:reducedMotion.matches?90:-55,speed:type==="epic"?19:type==="rare"?17:15};el.style.left=x+"px";el.style.top=g.y+"px";game.appendChild(el);gifts.push(g);}
+function submitChar(text){if(!running)return false;text=(text||"").trim();if(!text)return false;const chars=[...text],sorted=[...gifts].sort((a,b)=>b.pts-a.pts||b.y-a.y),g=sorted.find(x=>chars.includes(x.char));if(!g)return false;
+score+=g.pts;counts[g.type]++;scoreEl.textContent=score;blueEl.textContent=counts.common;purpleEl.textContent=counts.rare;goldEl.textContent=counts.epic;gifts=gifts.filter(x=>x!==g);g.el.style.transition="opacity .12s,transform .12s";g.el.style.opacity=0;g.el.style.transform="translate(-50%,-50%) scale(.7)";setTimeout(()=>g.el.remove(),130);return true;}
+document.querySelector("#submit").onclick=()=>{submitChar(answer.value);answer.value="";answer.focus()};
+let composing=false;
+function acceptAnswer(){if(composing)return;const text=answer.value.trim();if(!text)return;if(submitChar(text))answer.value="";}
+answer.addEventListener("compositionstart",()=>{composing=true});
+answer.addEventListener("compositionend",()=>{composing=false;acceptAnswer()});
+answer.addEventListener("input",e=>{if(!e.isComposing)acceptAnswer()});
+answer.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.isComposing&&!composing){acceptAnswer()}});
+function finish(){running=false;document.querySelector("#finalScore").textContent=score;document.querySelector("#rb").textContent=counts.common;document.querySelector("#rp").textContent=counts.rare;document.querySelector("#rg").textContent=counts.epic;const total=counts.common+counts.rare+counts.epic;document.querySelector("#honor").textContent=total>=18?"🏆 中文字達人！":total>=10?"🌟 寫字小高手！":"🎉 禮物收藏家！";document.querySelector("#resultText").textContent=`你成功寫對 ${total} 個中文字，收集了 ${total} 個禮物！`;document.querySelector("#result").style.display="flex";}
+document.querySelector("#again").onclick=()=>{document.querySelector("#result").style.display="none";document.querySelector("#intro").style.display="flex"};
+function loop(t){if(running){const elapsed=(t-startTime)/1000,left=Math.max(0,GAME_SECONDS-elapsed),remaining=Math.ceil(left),m=Math.floor(remaining/60),sec=remaining%60;timerEl.textContent=`⏱ ${m}:${String(sec).padStart(2,"0")}`;if(left<=0)finish();else{const dt=Math.min((t-last)/1000,.05);spawnClock+=dt;if(spawnClock>3.7&&gifts.length<MAX_GIFTS){spawn();spawnClock=0}const h=game.clientHeight;[...gifts].forEach(g=>{if(!reducedMotion.matches)g.y+=g.speed*dt;else if(g.y<90)g.y=90;g.el.style.top=g.y+"px";if(g.y>h+55){g.el.remove();gifts=gifts.filter(x=>x!==g)}});}}last=t;requestAnimationFrame(loop)}requestAnimationFrame(loop);
+
+// Handwriting canvas. Native web handwriting recognition is used only when the browser exposes it.
+const canvas=document.querySelector("#pad"),ctx=canvas.getContext("2d"),status=document.querySelector("#handStatus");let strokes=[],stroke=null;
+function sizeCanvas(){const r=canvas.getBoundingClientRect(),d=devicePixelRatio||1;if(!r.width||!r.height)return;canvas.width=r.width*d;canvas.height=r.height*d;ctx.setTransform(d,0,0,d,0,0);ctx.lineWidth=7;ctx.lineCap="round";ctx.lineJoin="round";ctx.strokeStyle="#26354d"}sizeCanvas();addEventListener("resize",sizeCanvas);
+function pos(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top,t:performance.now()}}
+canvas.onpointerdown=e=>{canvas.setPointerCapture(e.pointerId);stroke=[pos(e)];strokes.push(stroke);ctx.beginPath();ctx.moveTo(stroke[0].x,stroke[0].y)};
+canvas.onpointermove=e=>{if(!stroke)return;const p=pos(e);stroke.push(p);ctx.lineTo(p.x,p.y);ctx.stroke()};canvas.onpointerup=()=>stroke=null;canvas.onpointercancel=()=>stroke=null;
+function clearPad(){ctx.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);strokes=[];status.textContent="在白色區域寫一個字"}document.querySelector("#clear").onclick=clearPad;
+document.querySelector("#recognize").onclick=async()=>{if(!strokes.length){status.textContent="請先寫一個字";return}
+if(!("createHandwritingRecognizer" in navigator)){status.textContent="此瀏覽器沒有網頁手寫辨識；iPhone/iPad 可改用打字模式＋中文手寫鍵盤。";return}
+let rec;try{status.textContent="辨認中…";rec=await navigator.createHandwritingRecognizer({languages:["zh-Hant"]});const drawing=rec.startDrawing({recognitionType:"per-character",alternatives:2});
+for(const st of strokes){const rs=new HandwritingStroke();for(const p of st)rs.addPoint({x:p.x,y:p.y,t:p.t-st[0].t});drawing.addStroke(rs)}
+const preds=await drawing.getPrediction(),texts=(preds||[]).map(x=>x.text||"").filter(Boolean),hit=running&&texts.some(t=>submitChar(t));status.textContent=hit?"✅ 寫對了！":texts.length?"辨認到："+texts.slice(0,3).join(" / "):"沒有辨認到";if(hit){clearPad();status.textContent="✅ 寫對了！"}}catch(e){status.textContent="此瀏覽器無法辨認繁體中文，請返回入口並改用打字模式＋系統中文手寫鍵盤。"}finally{if(rec)rec.finish()}};
+</script>
+</body></html>

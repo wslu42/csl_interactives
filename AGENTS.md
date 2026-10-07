@@ -1,102 +1,269 @@
 # AGENTS.md
 
-## Project
+## Purpose
 
-CSL Interactives is a static web portal for small Chinese-learning interactive activities.
-The root page is the portal. Each activity lives in its own first-level subdirectory.
+This repository contains browser-based interactive games or learning activities
+published as a static website, typically through GitHub Pages.
 
-## Structure
+Preserve the repository's existing structure and conventions. Each game or
+activity should remain self-contained unless an existing shared asset is
+intentionally used by multiple activities.
 
-- `index.html` is the portal landing page.
-- `games/<activity-name>/` contains one self-contained activity.
-- `assets/` contains portal-wide styles and visual assets.
-- Activity-only audio, images, CSS, and JavaScript stay inside that activity's directory.
-- Use relative paths so the site works on static hosting such as GitHub Pages.
+## Repository structure
+
+- Treat the root `index.html` as the portal or landing page when one exists.
+- Keep each game or activity in its own existing subdirectory.
+- Follow the repository's current directory convention. Do not reorganize
+  existing activities merely to make directory names uniform.
+- Keep activity-specific HTML, CSS, JavaScript, images, audio, and other media
+  close to the activity that uses them.
+- Keep shared assets at repository level when they are genuinely shared.
+- Use relative paths so the site works correctly from the GitHub Pages
+  repository subpath.
+- Preserve clear navigation from each activity back to the repository's portal
+  when the repository provides one.
 
 ## Development principles
 
-- Keep the site dependency-free: use plain HTML, CSS, and JavaScript unless explicitly requested otherwise.
-- Make layouts responsive and touch-friendly.
-- Preserve Traditional Chinese (`zh-Hant`) as the default UI language.
-- Use accessible semantic HTML, visible focus states, meaningful button labels, and `aria-live` for changing game results where appropriate.
-- Respect `prefers-reduced-motion`; animation must not be required to use an activity.
-- Do not use external CDNs or trackers without explicit approval.
+- Prefer plain HTML, CSS, and JavaScript unless the existing activity already
+  uses another approach or the user explicitly requests one.
+- Avoid adding frameworks, build systems, external CDNs, trackers, or new
+  dependencies without a clear need and explicit approval.
+- Preserve the intended rules, educational content, and behavior of existing
+  games unless the requested change intentionally modifies them.
+- Make interfaces responsive and touch-friendly.
+- Traditional Chinese (`zh-Hant`) is the default UI language unless the user
+  explicitly requests otherwise.
+- Use accessible semantic HTML where practical, including meaningful control
+  labels, visible keyboard focus, and appropriate live announcements for
+  changing results.
+- Respect `prefers-reduced-motion`; essential interaction must not depend solely
+  on animation.
+- Do not advertise browser, input, or device capabilities that have not been
+  verified. Document known platform limitations honestly.
 
-## Adding an activity
+## Assets and media
 
-1. Create `games/<activity-name>/`.
-2. Include an `index.html` and activity-local assets as needed.
-3. Add a tile to the root portal page.
-4. Include a clear "返回入口" link in the activity.
-5. Update the portal's activity count and the activity list in `README.md`.
-6. Keep the imported game's intended rules and content; document browser limitations honestly in the activity and README. Do not advertise unsupported input modes as working.
-7. Verify all asset paths from the repository root and static hosting, including the GitHub Pages repository subpath. The return link is normally `../../`.
-8. Before delivery, test the new tile, every existing activity link, the new activity's return link, mobile and desktop layouts, keyboard controls, game start/input/results/replay, and console errors or missing assets. Record any checks that could not be completed.
-9. Review the exact diff, create a focused commit, and push directly to `main` after verification, following the default workflow below. Report the commit URL, validation, deployment status, and known limitations. Use a task branch and PR only when explicitly requested.
+- Keep activity-specific media with the activity that uses it.
+- Prefer descriptive, lowercase, hyphenated filenames for new assets unless
+  matching an existing naming convention is more important.
+- Verify image, audio, CSS, JavaScript, and navigation paths from the deployed
+  GitHub Pages repository subpath, not only from a local file.
+- Provide a reasonable browser-native fallback when prerecorded media cannot
+  load, when practical.
+- Do not commit generated temporary files, local editor settings, test output,
+  credentials, API keys, tokens, or other secrets.
 
-## Audio and media
+## Adding or changing a game
 
-- Keep media files close to the activity that uses them.
-- Use descriptive, lowercase, hyphenated filenames.
-- Provide a browser-native fallback when prerecorded audio cannot load.
+When adding a new activity:
+
+1. Create a self-contained activity directory using the repository's existing
+   directory convention.
+2. Include an `index.html` and any activity-local assets required by the game.
+3. Add or update the portal entry when the repository has a landing page.
+4. Add a clear way to return to the portal when applicable.
+5. Update README documentation, activity lists, or activity counts when the
+   repository currently maintains them.
+6. Start the new game's visible version at `v1.0.0`.
+7. Verify all paths and navigation under the GitHub Pages repository subpath.
+8. Test the activity before committing.
+
+When modifying an existing activity:
+
+- Preserve unrelated behavior and files.
+- Keep the change focused on the requested scope.
+- Re-test the affected interaction paths and any shared functionality touched by
+  the change.
+- Apply the game-version rules below before committing.
+
+## Visible game versions and cache busting
+
+Every mini-game must display its own `vMAJOR.MINOR.PATCH` version in small text
+in or directly below the game's header.
+
+The visible version in that game's `index.html` is the source of truth.
+
+For every pushed change affecting a game:
+
+- Increment its patch version at minimum.
+- A backward-compatible feature may increment the minor version.
+- An incompatible change may increment the major version.
+- Reset lower version components when increasing a higher component.
+- New games start at `v1.0.0`.
+- Update the visible version label and its accessible label together.
+- Update every local CSS and JavaScript URL's
+  `?v=MAJOR.MINOR.PATCH` query together with the visible version when those
+  assets are referenced by the game.
+- Changes to shared game assets require version bumps for every affected game.
+- Documentation-only changes do not require a game version bump.
+- Before committing, verify that visible versions and asset-query versions
+  match.
+
+After every push, report the affected games and their exact visible versions.
+
+If the change does not require a game version bump, explicitly report that game
+versions are unchanged.
 
 ## Git handling
 
-- Inspect `git status` before making changes and preserve unrelated user changes.
-- Do not use destructive commands such as `git reset --hard`, `git clean`, or force pushes unless explicitly requested.
+- Inspect the current branch and working-tree status before making changes.
+- Preserve unrelated user changes.
 - Keep each commit focused on one logical change.
-- Use clear imperative commit messages, for example: `Create portal landing page`.
-- Do not commit generated temporary files, local editor settings, test artifacts, or secrets.
-- Do not change Git configuration, remotes, or deployment settings unless explicitly requested. Use `main` by default; create a task branch when the user requests a branch or PR. Do not rewrite existing branch history.
-- Before committing, review the diff and verify affected navigation, assets, and interactions.
+- Use concise imperative commit messages.
+- Do not use destructive commands such as `git reset --hard`, `git clean`,
+  force pushes, history rewriting, or branch deletion unless explicitly
+  authorized.
+- Do not change Git configuration, remotes, repository protection, or deployment
+  settings unless explicitly requested.
+- Explicit user instructions such as `no commit`, `local-only`, `no push`, or
+  use a branch/PR override the default workflow below.
 
-## Branch naming (when a branch is requested)
+## Default workflow: commit and push to `main`
 
-- Use lowercase, hyphenated branch names in the format `<type>/<short-description>`.
-- Allowed types: `feat/` (new functionality), `fix/` (bug fixes), and `chore/` (documentation, maintenance, and repository structure).
-- Examples: `feat/portal-landing-page`, `fix/audio-paths`, `chore/project-guidelines`.
-- Do not use vague branch names such as `update`, `test`, or `new-branch`.
+Ordinary requested repository changes are authorized to be committed and pushed
+directly to `main` through the owner's connected GitHub account without asking
+again for routine commit/push approval.
 
-## Default workflow: commit and push to main
+A request to inspect, discuss, explain, review, or plan does not by itself
+authorize code changes.
 
-- The owner authorizes agents to complete requested repository changes by committing and pushing directly to `main` through the owner's connected GitHub account. Do not create a PR by default or ask again for routine commit/push approval.
-- Respect explicit instructions such as no commit, local-only, no push, or use a branch/PR. A request to inspect or discuss alone does not authorize code changes.
-- Before editing, inspect `git status`, fetch `origin`, and synchronize `main` with the latest `origin/main` using a fast-forward when possible. Preserve unrelated work; resolve divergence without destructive resets or history rewriting.
-- After implementing, perform the appropriate verification, record checks that could not be completed, and review the exact intended diff before creating a focused commit. Finish these checks before pushing because `main` may deploy immediately.
-- Immediately before pushing, fetch again and confirm that the commit is based on the latest remote `main`. If `main` advanced, incorporate those changes and repeat checks affected by the integration.
-- Push only the intended verified commits to `main`; never force push. If a push is rejected because remote `main` advanced, fetch, integrate, review, and retry normally.
-- Honor repository protection. If direct pushes require a PR, report the restriction and use a task branch/PR to deliver the change; do not change protection settings without an explicit user request.
-- Pushing `main` is authorized even when it triggers the repository's existing automatic GitHub Pages deployment. Do not change deployment settings or initiate separate manual deployments unless requested.
-- After pushing, verify the remote commit and inspect the associated deployment/workflow status when available. If deployment is pending, fails, or cannot be checked, state that clearly; do not claim the live website is updated based on push success alone.
-- Report the commit URL, what changed, validation, known limitations, and deployment status. For a needed rollback, prefer a focused `git revert` commit over rewriting history.
+Before editing:
 
-## Pull request workflow (only when requested or required by protection)
+1. Inspect repository status and the current branch.
+2. Fetch `origin`.
+3. Synchronize local `main` with the latest `origin/main` using a normal
+   fast-forward or other non-destructive integration when needed.
+4. Preserve unrelated work and do not rewrite existing branch history.
 
-- Use this workflow when the user explicitly requests a branch/PR or repository protection requires one. Never merge a PR unless explicitly requested.
-- By default, create every pull request from a branch based on the latest `origin/main`, with `main` as its base branch.
-- Do not create a pull request whose base is another feature, fix, chore, or open pull-request branch unless the user explicitly asks for a stacked PR.
-- Before creating a pull request, fetch `origin`, verify the intended base and head branches, and review the exact diff against the intended base.
-- When a preceding pull request is merged, update any follow-up branch from the new `origin/main` before opening its pull request; do not merge follow-up work into a stale former base branch.
-- After creating a pull request, verify its URL, base branch, head branch, and mergeability through GitHub.
-- State the intended merge order when the user explicitly requests stacked pull requests.
+Before committing:
 
-## Collaboration
+1. Run checks appropriate to the affected activity.
+2. Review the exact intended diff.
+3. Confirm that unrelated changes are not included.
+4. Verify required visible-version and cache-busting updates.
 
-- Treat user requests as the source of product intent; ask for clarification only when a decision would materially change scope, design, or behavior.
-- State important assumptions before implementing them.
-- Share a concise plan before multi-file, structural, or user-visible changes.
-- Respond to users in Traditional Chinese as used in Taiwan by default.
-- Accept user requests, code comments, and engineering discussion in either Traditional Chinese or English.
-- Report what changed, how it was verified, and any known limitations when work is complete.
-- Preserve user-authored work and unrelated changes.
-- Create a focused Git commit after completing a verified logical change, unless the user asks not to commit.
-- Follow the default verified commit/push-to-main workflow above, including existing automatic deployment triggered by that push. Manual deployments, PR merges, remote changes, and other external communications still require an explicit user request.
-- When multiple agents work in parallel, assign clear file ownership and avoid overlapping edits.
-- Record decisions that affect future work in `README.md` or another project document when requested.
+Immediately before pushing:
+
+1. Fetch `origin` again.
+2. Confirm the commit is based on the latest remote `main`.
+3. If remote `main` advanced, incorporate those changes without discarding work
+   and repeat any checks affected by the integration.
+
+Push only intended, verified commits. Never force-push.
+
+If a push is rejected because remote `main` advanced, fetch the latest remote
+state, integrate it normally, review the resulting diff, repeat affected
+verification, and retry the push without rewriting published history.
+
+If direct pushes are prevented by repository protection, use a task branch and
+pull request rather than changing protection settings.
+
+Pushing `main` may trigger the repository's existing GitHub Pages deployment.
+Do not change deployment settings or initiate a separate manual deployment
+unless explicitly requested.
+
+## Branches and pull requests
+
+Use a task branch and pull request only when:
+
+- the user explicitly requests one, or
+- repository protection requires one.
+
+When a branch is needed:
+
+- Use lowercase, hyphenated names in the format
+  `<type>/<short-description>`.
+- Allowed types are:
+  - `feat/` for new functionality
+  - `fix/` for bug fixes
+  - `chore/` for documentation, maintenance, and repository structure
+- Base the branch on the latest `origin/main`.
+- Do not create stacked pull requests unless explicitly requested.
+- Never merge a pull request unless explicitly requested.
+
+Before creating a pull request:
+
+- fetch `origin`
+- verify the intended base and head branches
+- review the exact diff against the intended base
+
+After creating a pull request, verify its URL, base branch, head branch, and
+mergeability.
 
 ## Verification
 
-- Test portal navigation to every activity and its return link.
-- Test narrow mobile and desktop viewport widths.
-- Confirm there are no browser-console errors or missing assets.
-- Confirm keyboard navigation works for interactive controls.
+Use judgment based on the scope of the change.
+
+For affected activities, verify as applicable:
+
+- portal navigation into the activity
+- return navigation back to the portal
+- narrow mobile and desktop layouts
+- touch interaction
+- keyboard interaction and visible focus
+- game start and primary controls
+- input and game-state behavior
+- results and scoring
+- reset or replay behavior
+- audio and media loading
+- browser console errors
+- missing assets or incorrect relative paths
+- automated tests already present in the repository
+
+When adding a new activity or modifying shared portal, navigation, or shared
+assets, also check existing activity links and behaviors that could reasonably
+be affected.
+
+Do not claim a check was completed if it was not possible in the current
+environment. Record checks that could not be completed.
+
+## Deployment and completion reporting
+
+A successful Git push does not prove that the deployed GitHub Pages site is
+already live.
+
+After pushing:
+
+- verify the remote commit
+- inspect the associated deployment or workflow status when available
+- check the deployed page when practical
+- do not claim that the live website is updated unless deployment was actually
+  verified
+
+If deployment is pending, failed, or cannot be checked, state that clearly.
+
+When the live deployment cannot yet be verified, tell the user which visible
+game version or versions they should expect to see after refreshing once the
+deployment completes.
+
+Report:
+
+- what changed
+- the commit or commit URL
+- affected games and their exact visible versions
+- or, when applicable, that game versions are unchanged
+- checks performed
+- deployment status
+- known limitations
+- checks that could not be completed
+
+For a needed rollback, prefer a focused `git revert` commit over rewriting
+published history.
+
+## Collaboration
+
+- Treat user requests as the source of product intent.
+- Ask for clarification only when a decision would materially change scope,
+  design, data, or behavior.
+- State important assumptions before implementing them.
+- For multi-file, structural, or user-visible changes, share a concise plan
+  before implementation.
+- Preserve user-authored work and unrelated changes.
+- When multiple agents work in parallel, assign clear, non-overlapping file
+  ownership where possible.
+- Record decisions that affect future work in `README.md` or another project
+  document when requested.
+- Respond to the user in Traditional Chinese as used in Taiwan by default.
+- Accept user requests, code comments, and engineering discussion in either
+  Traditional Chinese or English.

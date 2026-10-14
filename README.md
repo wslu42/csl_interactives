@@ -5,6 +5,7 @@
 目前活動：
 
 - `games/csl2-rolling/`：CSL2 中文轉球抽題
+- `games/csl2-sentence-challenge/`：CSL2 中文句子挑戰（v1.0.0；44 題、六種題型；老師控制、口頭作答、無網頁計分）
 - `games/misc-falling_gifts/`：中文禮物大作戰（語音版）
 - `games/misc-writing-gifts/`：中文寫字禮物大作戰（打字／實驗性手寫辨認）
 

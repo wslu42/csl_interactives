@@ -5,23 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#10233b">
 <meta name="description" content="五個洞、六天時間：狐狸每晚必須移動到相鄰洞穴。動手試試，再用動畫理解 2-3-4-2-3-4 的必勝策略。">
-<title>狐狸藏哪裡？｜六天邏輯挑戰 v1.0.0</title>
+<title>狐狸藏哪裡？｜六天邏輯挑戰 v1.1.0</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:#edf5fc;background:#0a1829;color-scheme:dark;--ink:#edf5fc;--muted:#adbed0;--panel:#142a43;--edge:#35506a;--lime:#c5f17b;--gold:#ffca75;--sky:#153655}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px;background:radial-gradient(circle at 13% 0%,#1a3c56 0,transparent 36%),#0a1829}button{font:inherit;cursor:pointer;touch-action:manipulation}button:disabled{cursor:not-allowed;opacity:.52}a{color:#b7ddff}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f3d98b;outline-offset:4px}.shell{width:min(1140px,calc(100% - 32px));margin:0 auto}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:24px 0 18px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:14px;letter-spacing:.01em}.brand-badge{width:38px;height:38px;border-radius:13px;background:#294662;display:grid;place-items:center;font-size:22px}.back-link{text-decoration:none;border:1px solid #49637b;border-radius:999px;padding:9px 13px;font-weight:650;font-size:13px;white-space:nowrap}.version{font-size:12px;color:var(--muted);font-weight:550}.hero{padding:22px 0 24px}.kicker{color:var(--lime);font-weight:850;font-size:12px;letter-spacing:.18em;margin:0 0 10px}h1{font-size:clamp(31px,5vw,55px);letter-spacing:-.045em;line-height:1.13;margin:0 0 13px}h1 span{color:var(--lime)}.intro{font-size:clamp(14px,1.8vw,17px);color:var(--muted);line-height:1.75;max-width:730px;margin:0}.rules{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0 0}.rule{display:flex;align-items:center;gap:6px;padding:8px 12px;background:#1b344b;border:1px solid #3b5267;border-radius:999px;color:#dce8f3;font-size:12px;font-weight:700}
 .layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,1fr);gap:18px;align-items:start}.panel{background:linear-gradient(160deg,#172d45,#102339);border:1px solid #37516b;border-radius:23px;box-shadow:0 22px 65px #020a1740;overflow:hidden}.play-panel{padding:17px}.top-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:14px}.mode-switch{display:inline-flex;gap:4px;background:#0b1b2d;padding:4px;border-radius:13px;border:1px solid #3a4c60}.mode-btn{border:0;background:transparent;color:#afc4d9;padding:11px 15px;border-radius:10px;font-weight:850;font-size:13px;min-height:42px}.mode-btn[aria-pressed=true]{color:#10233b;background:var(--lime);box-shadow:0 3px 12px #7da94f40}.reset-btn{border:1px solid #516780;background:#1a344c;border-radius:12px;padding:10px 13px;color:#dceafa;font-weight:750;font-size:13px;min-height:45px}.status-strip{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#0c1f33;border:1px solid #2a4864;padding:13px 14px;border-radius:15px;margin-bottom:12px}.day-head{font-size:13px;color:#acc4d8;font-weight:650}.day-head strong{font-size:23px;color:#fff;margin-right:5px}.status-note{font-size:12px;color:var(--lime);font-weight:750;text-align:right}.day-dots{display:flex;gap:7px;margin-top:6px}.day-dot{height:6px;width:27px;border-radius:8px;background:#3b536c}.day-dot.done{background:var(--lime)}.day-dot.current{background:var(--gold);box-shadow:0 0 0 3px #ffc77721}
-.scene{height:clamp(300px,35vw,410px);position:relative;overflow:hidden;border:1px solid #35556f;border-radius:18px;background:#173956;isolation:isolate}.scene .sky{position:absolute;inset:0 0 44%;background:radial-gradient(circle at 15% 23%,#34698b80,transparent 38%),linear-gradient(180deg,#244b67,#326482);transition:background .5s}.scene.night .sky{background:radial-gradient(circle at 75% 19%,#2e486c,transparent 38%),linear-gradient(180deg,#09162f,#1a3353)}.sunmoon{position:absolute;right:8%;top:13%;font-size:36px;filter:drop-shadow(0 0 13px #ffe7a066);transition:transform .5s}.scene.night .sunmoon{transform:rotate(-20deg)}.hill{position:absolute;bottom:40%;height:32%;width:130%;left:-15%;background:#477b5a;border-radius:50% 50% 0 0;z-index:1}.grass{position:absolute;bottom:40%;left:0;right:0;height:17px;z-index:3;background:repeating-linear-gradient(105deg,#7dae6c 0 4px,#4e9165 4px 8px);clip-path:polygon(0 70%,2% 8%,4% 64%,7% 16%,9% 75%,12% 10%,15% 70%,18% 13%,20% 75%,24% 0,27% 70%,30% 15%,33% 80%,37% 5%,41% 78%,45% 14%,49% 70%,53% 3%,56% 70%,60% 5%,64% 75%,68% 3%,72% 72%,76% 8%,80% 70%,85% 3%,89% 75%,94% 6%,97% 68%,100% 25%,100% 100%,0 100%)}.ground{position:absolute;left:0;right:0;bottom:0;height:42%;background:radial-gradient(ellipse at 35% 52%,#8d6942 0 2px,transparent 3px),radial-gradient(ellipse at 60% 67%,#b48b52 0 2px,transparent 3px),linear-gradient(180deg,#6b4932,#342d30);background-size:38px 32px,54px 46px,auto;z-index:2}.tunnel{position:absolute;left:10%;right:10%;top:65%;height:4px;background:repeating-linear-gradient(90deg,#e6bc8855 0 15px,transparent 15px 25px);z-index:3}.ground-label{position:absolute;right:16px;bottom:10px;z-index:7;color:#dac8b2;font-size:11px;opacity:.72}.holes{position:absolute;inset:30% 0 11%;z-index:5;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center}.hole{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;width:100%;height:90%;min-width:0;border:0;background:none;color:white;transition:transform .2s;user-select:none}.hole:hover:not(:disabled){transform:translateY(-5px)}.hole-number{position:absolute;top:3%;font-size:13px;font-weight:900;background:#12344d;border:1px solid #9fb9cb69;border-radius:999px;display:grid;place-items:center;min-width:29px;height:29px;z-index:3}.burrow{display:block;width:min(83%,106px);height:clamp(55px,9vw,81px);background:radial-gradient(ellipse at 50% 55%,#0b1017 33%,#231b1d 49%,#aa7147 52%,#deb06a 66%,#895333 72%,transparent 75%);filter:drop-shadow(0 10px 3px #16141083);border-radius:50%;z-index:2}.hole .possible-label{position:absolute;bottom:1%;font-size:10px;font-weight:750;color:#f0ffc9;background:#335a41;border:1px solid #b6e788;padding:3px 5px;border-radius:999px;z-index:4}.hole .possible-label[hidden]{display:none}.hole.checking .burrow{animation:scan .75s ease-in-out;filter:drop-shadow(0 0 15px #ffc563)}.hole.chosen .hole-number{background:#e7b15f;color:#122a3a}.hole.found .burrow{filter:drop-shadow(0 0 18px #d0ff85)}.hole.found .hole-number{background:var(--lime);color:#132638}.hole:disabled{opacity:1}.fox-sprite{position:absolute;z-index:6;top:32%;left:10%;transform:translateX(-50%);font-size:clamp(36px,6vw,58px);line-height:1;opacity:0;pointer-events:none;transition:left .7s cubic-bezier(.25,.7,.3,1),opacity .25s;filter:drop-shadow(0 5px 4px #091e24a0)}.fox-sprite.visible{opacity:1}.fox-sprite.hop{animation:fox-hop .8s ease-in-out}.scene.night .fox-sprite.visible{filter:drop-shadow(0 0 12px #ffb568aa)}.night-notice{position:absolute;inset:13% 0 auto;z-index:8;width:fit-content;max-width:90%;margin:0 auto;left:0;right:0;text-align:center;color:#f9eed2;background:#101f36e8;border:1px solid #9ab1c3;border-radius:12px;padding:10px 17px;font-weight:850;font-size:13px;pointer-events:none}.night-notice[hidden]{display:none}@keyframes scan{0%,100%{transform:scale(1)}50%{transform:scale(1.2);filter:drop-shadow(0 0 19px #ffe89a)}}@keyframes fox-hop{0%,100%{translate:0 0}45%{translate:0 -23px}}
-.message{margin-top:12px;border-radius:16px;background:#0c2134;border:1px solid #3a5972;padding:14px 16px;min-height:89px}.message h2{font-size:17px;margin:0 0 6px;color:#fff}.message p{font-size:13px;line-height:1.6;color:#bcd0de;margin:0}.action-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px}.primary-btn{border:0;color:#142539;background:var(--lime);border-radius:12px;padding:13px 19px;font-size:14px;font-weight:900;min-height:48px}.secondary-btn{border:1px solid #57728c;color:#e0ebf5;background:#214058;border-radius:12px;padding:12px 15px;font-size:13px;font-weight:800;min-height:46px}.hint-check{display:flex;align-items:center;gap:8px;margin-left:auto;cursor:pointer;font-size:12px;color:#cae0ef;font-weight:750}.hint-check input{accent-color:#b9f17b;width:18px;height:18px}.helper{font-size:12px;color:#aabed1;line-height:1.6;margin:8px 2px 0}.helper strong{color:#d3faa5}
+.scene{height:clamp(300px,35vw,410px);position:relative;overflow:hidden;border:1px solid #35556f;border-radius:18px;background:#173956;isolation:isolate}.scene .sky{position:absolute;inset:0 0 44%;background:radial-gradient(circle at 15% 23%,#34698b80,transparent 38%),linear-gradient(180deg,#244b67,#326482);transition:background .5s}.scene.night .sky{background:radial-gradient(circle at 75% 19%,#2e486c,transparent 38%),linear-gradient(180deg,#09162f,#1a3353)}.sunmoon{position:absolute;right:8%;top:13%;font-size:36px;filter:drop-shadow(0 0 13px #ffe7a066);transition:transform .5s}.scene.night .sunmoon{transform:rotate(-20deg)}.hill{position:absolute;bottom:40%;height:32%;width:130%;left:-15%;background:#477b5a;border-radius:50% 50% 0 0;z-index:1}.grass{position:absolute;bottom:40%;left:0;right:0;height:17px;z-index:3;background:repeating-linear-gradient(105deg,#7dae6c 0 4px,#4e9165 4px 8px);clip-path:polygon(0 70%,2% 8%,4% 64%,7% 16%,9% 75%,12% 10%,15% 70%,18% 13%,20% 75%,24% 0,27% 70%,30% 15%,33% 80%,37% 5%,41% 78%,45% 14%,49% 70%,53% 3%,56% 70%,60% 5%,64% 75%,68% 3%,72% 72%,76% 8%,80% 70%,85% 3%,89% 75%,94% 6%,97% 68%,100% 25%,100% 100%,0 100%)}.ground{position:absolute;left:0;right:0;bottom:0;height:42%;background:radial-gradient(ellipse at 35% 52%,#8d6942 0 2px,transparent 3px),radial-gradient(ellipse at 60% 67%,#b48b52 0 2px,transparent 3px),linear-gradient(180deg,#6b4932,#342d30);background-size:38px 32px,54px 46px,auto;z-index:2}.tunnel-network{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;overflow:visible}.tunnel-wall{fill:none;stroke:#a07755;stroke-width:68;stroke-linecap:round;stroke-linejoin:round;opacity:.94}.tunnel-core{fill:none;stroke:#182631;stroke-width:47;stroke-linecap:round;stroke-linejoin:round}.tunnel-guideline{fill:none;stroke:#ffd389;stroke-width:4;stroke-linecap:round;stroke-dasharray:9 15;opacity:.42}.scene.night .tunnel-guideline{opacity:.75}.ground-label{position:absolute;right:16px;bottom:10px;z-index:7;color:#dac8b2;font-size:11px;opacity:.72}.holes{position:absolute;inset:30% 0 11%;z-index:5;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center}.hole{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;width:100%;height:90%;min-width:0;border:0;background:none;color:white;transition:transform .2s;user-select:none}.hole:hover:not(:disabled){transform:translateY(-5px)}.hole-number{position:absolute;top:3%;font-size:13px;font-weight:900;background:#12344d;border:1px solid #9fb9cb69;border-radius:999px;display:grid;place-items:center;min-width:29px;height:29px;z-index:3}.burrow{display:block;width:min(83%,106px);height:clamp(55px,9vw,81px);background:radial-gradient(ellipse at 50% 55%,#0b1017 33%,#231b1d 49%,#aa7147 52%,#deb06a 66%,#895333 72%,transparent 75%);filter:drop-shadow(0 10px 3px #16141083);border-radius:50%;z-index:2}.hole .possible-label{position:absolute;top:21%;font-size:10px;font-weight:750;color:#f0ffc9;background:#335a41;border:1px solid #b6e788;padding:3px 5px;border-radius:999px;z-index:4}.hole .possible-label[hidden]{display:none}.hole.checking .burrow{animation:scan .75s ease-in-out;filter:drop-shadow(0 0 15px #ffc563)}.hole.chosen .hole-number{background:#e7b15f;color:#122a3a}.hole.found .burrow{filter:drop-shadow(0 0 18px #d0ff85)}.hole.found .hole-number{background:var(--lime);color:#132638}.hole:disabled{opacity:1}.fox-sprite{position:absolute;z-index:6;top:66%;left:10%;transform:translate(-50%,-50%);font-size:clamp(27px,3.5vw,37px);line-height:1;opacity:0;pointer-events:none;transition:left .9s linear,top .42s ease-in-out,opacity .2s;filter:drop-shadow(0 4px 5px #030b12)}.fox-sprite.surface{font-size:clamp(36px,6vw,58px)}.fox-sprite.visible{opacity:1}.scene.night .fox-sprite.visible{filter:drop-shadow(0 0 12px #ffb568aa)}.night-notice{position:absolute;inset:13% 0 auto;z-index:8;width:fit-content;max-width:90%;margin:0 auto;left:0;right:0;text-align:center;color:#f9eed2;background:#101f36e8;border:1px solid #9ab1c3;border-radius:12px;padding:10px 17px;font-weight:850;font-size:13px;pointer-events:none}.night-notice[hidden]{display:none}@keyframes scan{0%,100%{transform:scale(1)}50%{transform:scale(1.2);filter:drop-shadow(0 0 19px #ffe89a)}}@keyframes fox-hop{0%,100%{translate:0 0}45%{translate:0 -23px}}
+.search-feedback{display:flex;align-items:flex-start;gap:10px;margin:-2px 0 12px;padding:11px 14px;background:#3a2e1c;border:1px solid #e3aa57;border-radius:12px;color:#fff0cb;line-height:1.5}.search-feedback strong{white-space:nowrap;font-size:13px;color:#ffe0a2}.search-feedback span{font-size:12px}.search-feedback.success{background:#1a433a;border-color:#bde883}.search-feedback.success strong{color:#d5ffb0}.search-feedback[hidden],.candidate-legend[hidden]{display:none}.candidate-legend{margin:0 1px 9px;padding:9px 12px;background:#1a3445;border-left:3px solid var(--lime);border-radius:8px;color:#d7e7e6;font-size:12px;line-height:1.6}.candidate-legend strong{color:#daf5ab}.message{margin-top:12px;border-radius:16px;background:#0c2134;border:1px solid #3a5972;padding:14px 16px;min-height:89px}.message h2{font-size:17px;margin:0 0 6px;color:#fff}.message p{font-size:13px;line-height:1.6;color:#bcd0de;margin:0}.action-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px}.primary-btn{border:0;color:#142539;background:var(--lime);border-radius:12px;padding:13px 19px;font-size:14px;font-weight:900;min-height:48px}.secondary-btn{border:1px solid #57728c;color:#e0ebf5;background:#214058;border-radius:12px;padding:12px 15px;font-size:13px;font-weight:800;min-height:46px}.hint-check{display:flex;align-items:center;gap:8px;margin-left:auto;cursor:pointer;font-size:12px;color:#cae0ef;font-weight:750}.hint-check input{accent-color:#b9f17b;width:18px;height:18px}.helper{font-size:12px;color:#aabed1;line-height:1.6;margin:8px 2px 0}.helper strong{color:#d3faa5}
 .side-panel{padding:22px}.eyebrow{font-size:11px;letter-spacing:.15em;color:#96b2ce;font-weight:850;margin:0 0 8px}.side-panel h2,.history-panel h2{font-size:19px;letter-spacing:-.025em;margin:0 0 10px}.candidate-count{font-weight:900;color:var(--lime);font-size:31px;font-variant-numeric:tabular-nums}.candidate-summary{color:#b8cddd;font-size:13px;line-height:1.6;margin:0 0 15px}.candidate-chips{display:flex;flex-wrap:wrap;gap:7px;min-height:38px;margin-bottom:20px}.candidate-chip{border:1px solid #719a61;background:#2d4d3b;color:#d9ffc6;border-radius:999px;font-size:12px;font-weight:850;padding:7px 9px}.candidate-placeholder{font-size:13px;color:#9eb5ca;line-height:1.5}.divider{height:1px;background:#344b64;margin:17px 0}.logic-title{font-size:14px;color:#dcedf8;font-weight:800;margin:0 0 10px}.logic-list{margin:0;padding:0;list-style:none;display:grid;gap:8px}.logic-list li{display:grid;grid-template-columns:23px minmax(0,1fr);gap:9px;font-size:12px;line-height:1.6;color:#bad0e0}.logic-list strong{color:#f0f9fd;font-weight:900}.step-number{width:23px;height:23px;border-radius:7px;background:#2e5362;color:#cff69c;font-size:12px;display:grid;place-items:center;font-weight:850}.strategy{background:#0b1f32;border:1px solid #41576b;border-radius:14px;padding:13px;margin-top:16px}.strategy strong{display:block;color:#ffce89;font-size:12px;margin-bottom:6px}.strategy-code{font-size:clamp(17px,2.1vw,21px);font-weight:900;letter-spacing:.1em;color:#f0f6fd;white-space:nowrap}.strategy small{display:block;color:#a7bed1;margin-top:8px;line-height:1.55}.history-panel{margin:18px 0 32px;padding:22px}.history-heading{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}.history-heading p{font-size:12px;color:#a6c0d5;margin:0}.timeline{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:14px}.timeline-day{padding:10px 6px 11px;text-align:center;background:#0e2438;border:1px solid #34506d;border-radius:13px;min-width:0}.timeline-day.current{border-color:#e2c37c}.timeline-day.success{background:#294933;border-color:#adf18c}.timeline-num{font-size:11px;color:#b7cedd;font-weight:800}.timeline-value{font-size:18px;font-weight:900;margin-top:5px;color:#eff7fe}.timeline-outcome{font-size:10px;color:#b6cadd;margin-top:4px}.timeline-day.success .timeline-value{color:#d4ff9a}.route{font-size:13px;color:#d9eab4;margin:15px 0 0;line-height:1.8;word-wrap:break-word}.route[hidden]{display:none}.footer{color:#7490a7;font-size:12px;text-align:center;padding:0 0 30px}
 @media(max-width:850px){.layout{grid-template-columns:1fr}.side-panel{padding:20px}.hero{padding-top:12px}.scene{height:390px}}
-@media(max-width:520px){.topbar{padding-top:15px}.back-link{font-size:12px;padding:8px}.brand{font-size:12px}.version{font-size:10px}.play-panel{padding:11px}.mode-btn{padding:10px 12px;font-size:12px}.scene{height:300px}.hole-number{top:8%;font-size:11px;min-width:25px;height:25px}.burrow{height:56px}.hole .possible-label{font-size:9px;padding:2px 3px}.fox-sprite{top:37%;font-size:39px}.status-strip{padding:11px}.day-dot{width:19px}.timeline{gap:4px}.timeline-day{padding:10px 3px}.timeline-value{font-size:15px}.timeline-outcome{font-size:9px}.rule{font-size:11px}.hint-check{margin-left:0}.action-row{gap:9px}}
+@media(max-width:520px){.topbar{padding-top:15px}.back-link{font-size:12px;padding:8px}.brand{font-size:12px}.version{font-size:10px}.play-panel{padding:11px}.mode-btn{padding:10px 12px;font-size:12px}.scene{height:300px}.hole-number{top:8%;font-size:11px;min-width:25px;height:25px}.burrow{height:56px}.hole .possible-label{font-size:9px;padding:2px 3px}.fox-sprite{font-size:27px}.fox-sprite.surface{font-size:39px}.status-strip{padding:11px}.day-dot{width:19px}.timeline{gap:4px}.timeline-day{padding:10px 3px}.timeline-value{font-size:15px}.timeline-outcome{font-size:9px}.rule{font-size:11px}.hint-check{margin-left:0}.action-row{gap:9px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 <div class="shell">
 <header class="topbar">
-  <div class="brand"><span class="brand-badge" aria-hidden="true">🦊</span><span>FOX &amp; HOLES <span class="version" aria-label="遊戲版本 v1.0.0">v1.0.0</span></span></div>
+  <div class="brand"><span class="brand-badge" aria-hidden="true">🦊</span><span>FOX &amp; HOLES <span class="version" aria-label="遊戲版本 v1.1.0">v1.1.0</span></span></div>
   <a class="back-link" href="../../">← 返回遊戲首頁</a>
 </header>
 <main>
@@ -44,32 +44,35 @@
     <div><div class="day-head"><strong id="dayText">第 1 天</strong>／ 6 天</div><div class="day-dots" id="dayDots" aria-hidden="true"></div></div>
     <div class="status-note" id="modeNote">請選一個洞檢查</div>
   </div>
-  <div class="scene" id="scene" aria-label="狐狸躲藏的五個洞">
-    <div class="sky"></div><div class="sunmoon" id="sunmoon" aria-hidden="true">☀️</div><div class="hill"></div><div class="grass"></div><div class="ground"></div><div class="tunnel"></div>
+  <div class="search-feedback" id="searchFeedback" role="status" aria-live="polite" aria-atomic="true" hidden><strong id="feedbackTitle"></strong><span id="feedbackBody"></span></div>
+  <div class="candidate-legend" id="candidateLegend" hidden><strong>🟢「未排除」是推理提示：</strong>依照目前線索，狐狸今天仍有可能藏在這些洞。這不代表已經看見狐狸，更不是狐狸同時藏在多個洞。</div>
+  <div class="scene" id="scene" aria-label="狐狸躲藏的五個洞及地下連通道">
+    <div class="sky"></div><div class="sunmoon" id="sunmoon" aria-hidden="true">☀️</div><div class="hill"></div><div class="grass"></div><div class="ground"></div>
+    <svg class="tunnel-network" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"><path class="tunnel-wall" d="M100 594 V765 H900 V594 M300 594 V765 M500 594 V765 M700 594 V765"/><path class="tunnel-core" d="M100 594 V765 H900 V594 M300 594 V765 M500 594 V765 M700 594 V765"/><path class="tunnel-guideline" d="M100 765 H900"/></svg>
     <div class="fox-sprite" id="foxSprite" aria-hidden="true">🦊</div>
     <div class="holes" id="holes">
-      <button type="button" class="hole" data-hole="1" aria-label="檢查 1 號洞"><span class="hole-number">1</span><span class="burrow" aria-hidden="true"></span><span class="possible-label" hidden>可能</span></button>
-      <button type="button" class="hole" data-hole="2" aria-label="檢查 2 號洞"><span class="hole-number">2</span><span class="burrow" aria-hidden="true"></span><span class="possible-label" hidden>可能</span></button>
-      <button type="button" class="hole" data-hole="3" aria-label="檢查 3 號洞"><span class="hole-number">3</span><span class="burrow" aria-hidden="true"></span><span class="possible-label" hidden>可能</span></button>
-      <button type="button" class="hole" data-hole="4" aria-label="檢查 4 號洞"><span class="hole-number">4</span><span class="burrow" aria-hidden="true"></span><span class="possible-label" hidden>可能</span></button>
-      <button type="button" class="hole" data-hole="5" aria-label="檢查 5 號洞"><span class="hole-number">5</span><span class="burrow" aria-hidden="true"></span><span class="possible-label" hidden>可能</span></button>
+      <button type="button" class="hole" data-hole="1" aria-label="檢查 1 號洞"><span class="hole-number">1</span><span class="burrow" aria-hidden="true"></span><span class="possible-label" hidden>未排除</span></button>
+      <button type="button" class="hole" data-hole="2" aria-label="檢查 2 號洞"><span class="hole-number">2</span><span class="burrow" aria-hidden="true"></span><span class="possible-label" hidden>未排除</span></button>
+      <button type="button" class="hole" data-hole="3" aria-label="檢查 3 號洞"><span class="hole-number">3</span><span class="burrow" aria-hidden="true"></span><span class="possible-label" hidden>未排除</span></button>
+      <button type="button" class="hole" data-hole="4" aria-label="檢查 4 號洞"><span class="hole-number">4</span><span class="burrow" aria-hidden="true"></span><span class="possible-label" hidden>未排除</span></button>
+      <button type="button" class="hole" data-hole="5" aria-label="檢查 5 號洞"><span class="hole-number">5</span><span class="burrow" aria-hidden="true"></span><span class="possible-label" hidden>未排除</span></button>
     </div>
-    <div id="nightNotice" class="night-notice" hidden>🌙 天黑了！狐狸正移動到隔壁的洞……</div><div class="ground-label">地下通道 · 相鄰洞穴</div>
+    <div id="nightNotice" class="night-notice" hidden>🌙 天黑了！狐狸正沿地下通道移動到隔壁的洞……</div><div class="ground-label">地底連通道 · 只能移到相鄰洞穴</div>
   </div>
   <div class="message" role="status" aria-live="polite" aria-atomic="true"><h2 id="messageTitle">狐狸已藏好了！</h2><p id="messageBody">點選上方任意一個洞開始搜查。狐狸的位置在遊戲過程中不會顯示。</p></div>
   <div class="action-row">
     <button type="button" class="primary-btn" id="nextBtn" hidden>▶ 下一天</button>
     <button type="button" class="secondary-btn" id="autoBtn" hidden>⏵ 自動播放六天</button>
     <button type="button" class="secondary-btn" id="replayBtn" hidden>↻ 再玩一次</button>
-    <label class="hint-check" id="hintLabel"><input type="checkbox" id="hintToggle"> 顯示可能躲藏位置</label>
+    <label class="hint-check" id="hintLabel"><input type="checkbox" id="hintToggle"> 顯示未排除的洞（推理提示）</label>
   </div>
   <p class="helper" id="helperText">小提示：狐狸不能停在原洞，也不能從 1 號洞直接跳到 5 號洞。</p>
 </section>
 <aside class="panel side-panel" aria-label="推理觀察區">
   <p class="eyebrow">DEDUCTION TRACKER</p>
-  <h2>狐狸可能在哪裡？</h2>
+  <h2>哪些洞還沒被排除？</h2>
   <div class="candidate-count" id="candidateCount">？</div>
-  <p class="candidate-summary" id="candidateSummary">開啟「顯示可能躲藏位置」後，每次搜查都能觀察剩下的可能位置。</p>
+  <p class="candidate-summary" id="candidateSummary">綠色標記是「推理上尚未排除」，並不表示狐狸實際的位置。</p>
   <div class="candidate-chips" id="candidateChips"><span class="candidate-placeholder">目前不顯示推理線索</span></div>
   <div class="divider"></div>
   <p class="logic-title">每一天發生什麼事？</p>
@@ -88,7 +91,7 @@
   <p class="route" id="foxRoute" hidden></p>
 </section>
 </main>
-<footer class="footer">Fox &amp; Holes · 一個關於奇偶性、路徑與邏輯排除的互動小遊戲 · v1.0.0</footer>
+<footer class="footer">Fox &amp; Holes · 一個關於奇偶性、路徑與邏輯排除的互動小遊戲 · v1.1.0</footer>
 </div>
 <script>
 'use strict';
@@ -109,15 +112,29 @@
   function setMessage(title,body){$('messageTitle').textContent=title;$('messageBody').textContent=body}
   function showHints(){return state.mode==='demo'||state.hints||state.over}
   function placeFox(){
-    $('foxSprite').style.left=((state.fox-.5)*20)+'%';
-    $('foxSprite').classList.toggle('visible',state.mode==='demo'||state.over);
+    const sprite=$('foxSprite');
+    sprite.style.left=((state.fox-.5)*20)+'%';
+    sprite.style.top=state.foxStage==='surface'?'32%':state.foxStage==='tunnel'?'76.5%':'66%';
+    sprite.classList.toggle('surface',state.foxStage==='surface');
+    sprite.classList.toggle('visible',state.mode==='demo'||state.over);
+  }
+  function renderFeedback(){
+    const el=$('searchFeedback'),data=state.feedback;
+    el.hidden=!data;
+    el.classList.toggle('success',!!data?.found);
+    if(!data)return;
+    $('feedbackTitle').textContent=data.found?'🎉 找到狐狸！':'🔎 沒有找到狐狸！';
+    $('feedbackBody').textContent=data.found
+      ?'第 '+data.day+' 天，在 '+data.hole+' 號洞成功抓到牠！'
+      :'第 '+data.day+' 天檢查的 '+data.hole+' 號洞是空的。這個結果已記錄；狐狸只會在晚上移動到相鄰洞穴。';
   }
   function render(){
     const demo=state.mode==='demo';
+    renderFeedback();
     $('challengeMode').setAttribute('aria-pressed',String(!demo));
     $('demoMode').setAttribute('aria-pressed',String(demo));
     $('dayText').textContent='第 '+Math.min(6,state.day)+' 天';
-    $('modeNote').textContent=state.over?(state.won?'🎉 成功抓到狐狸！':'挑戰結束'):(state.busy?'搜查進行中…':(demo?'跟著必勝順序走':'請選一個洞檢查'));
+    $('modeNote').textContent=state.over?(state.won?'🎉 成功抓到狐狸！':'挑戰結束'):(state.busy?'搜查進行中…':(demo?'跟著必勝順序走':(state.feedback?'上次沒找到，請繼續搜查':'請選一個洞檢查')));
     $('dayDots').replaceChildren();
     for(let d=1;d<=6;d++){
       const dot=document.createElement('span');dot.className='day-dot'+(d<state.day||state.over&&d<=state.history.length?' done':d===state.day?' current':'');$('dayDots').appendChild(dot);
@@ -127,11 +144,12 @@
       btn.disabled=demo||state.busy||state.over;
       btn.classList.toggle('chosen',state.history.length>0&&state.history[state.history.length-1].checked===n);
       btn.classList.toggle('found',state.over&&state.won&&state.fox===n);
-      btn.querySelector('.possible-label').hidden=!(showHints()&&state.candidates.includes(n)&&!state.busy);
+      btn.querySelector('.possible-label').hidden=!(showHints()&&state.candidates.includes(n)&&!state.over&&!state.busy);
     });
     const visible=showHints();
+    $('candidateLegend').hidden=!visible||state.over;
     $('candidateCount').textContent=visible?state.candidates.length+' 個可能位置':'？';
-    $('candidateSummary').textContent=visible?'根據到目前為止所有搜查結果，狐狸可能在以下洞穴：':'開啟「顯示可能躲藏位置」後，就能觀察每晚如何縮小狐狸的藏身範圍。';
+    $('candidateSummary').textContent=visible?(state.over?(state.won?'抓捕完成：狐狸最後被找到的位置。':'挑戰結束，以下是最後沒有被排除的候選洞。'):'這些是依照已知搜查結果與相鄰移動規則，今天仍未被排除的洞；不代表狐狸已被看見。'):'勾選「顯示未排除的洞」才能看到推理候選位置。';
     $('candidateChips').replaceChildren();
     if(visible){
       state.candidates.forEach(n=>{const chip=document.createElement('span');chip.className='candidate-chip';chip.textContent=n+' 號洞';$('candidateChips').appendChild(chip)})
@@ -143,7 +161,7 @@
     $('autoBtn').hidden=!demo||state.over;
     $('autoBtn').textContent=state.auto?'■ 停止自動播放':'⏵ 自動播放六天';
     $('replayBtn').hidden=!state.over;
-    $('helperText').innerHTML=demo?'<strong>策略示範：</strong>按「下一天」逐步觀看，或自動播放六天。🦊 代表一條示例路徑，綠色標籤代表所有仍有可能的位置。':'<strong>挑戰目標：</strong>嘗試設計能夠保證抓到狐狸的六天順序。想驗證方法，可切換到策略演示。';
+    $('helperText').innerHTML=demo?'<strong>策略示範：</strong>🦊 是其中一條示範路徑。每晚會從洞口下到地下通道，再移至相鄰洞口；綠色「未排除」是推理候選，不是狐狸分身。':'<strong>挑戰目標：</strong>嘗試設計能夠保證抓到狐狸的六天順序。搜查落空會在洞穴上方持續提示；想看完整地下移動，可切換到策略演示。';
     placeFox();
     renderTimeline();
   }
@@ -165,7 +183,7 @@
   function reset(mode){
     epoch++;
     const previousHints=state?state.hints:false;
-    state={mode,day:1,fox:mode==='demo'?DEMO_PATH[0]:randomOf(HOLES),path:[],candidates:HOLES.slice(),history:[],hints:previousHints,over:false,won:false,busy:false,auto:false};
+    state={mode,day:1,fox:mode==='demo'?DEMO_PATH[0]:randomOf(HOLES),foxStage:'shaft',feedback:null,path:[],candidates:HOLES.slice(),history:[],hints:previousHints,over:false,won:false,busy:false,auto:false};
     state.path.push(state.fox);
     $('scene').classList.remove('night');$('nightNotice').hidden=true;$('sunmoon').textContent='☀️';
     holeButtons.forEach(btn=>btn.classList.remove('checking'));
@@ -178,6 +196,7 @@
     if(state.busy||state.over||n<1||n>5)return;
     const ticket=epoch;
     state.busy=true;
+    state.feedback=null;
     holeButtons[n-1].classList.add('checking');
     setMessage('🔎 正在檢查 '+n+' 號洞…','先仔細看看狐狸有沒有藏在這裡。');
     render();
@@ -186,19 +205,20 @@
     holeButtons[n-1].classList.remove('checking');
     const found=state.fox===n;
     const remaining=state.candidates.filter(pos=>pos!==n);
+    state.feedback={found,day:state.day,hole:n};
     state.history.push({day:state.day,checked:n,found,possibleAfter:found?[n]:remaining.slice()});
     if(found){
-      state.over=true;state.won=true;state.candidates=[n];state.busy=false;
+      state.over=true;state.won=true;state.candidates=[n];state.busy=false;state.foxStage='surface';
       setMessage('🎉 第 '+state.day+' 天抓到狐狸！','你在 '+n+' 號洞找到了狐狸！這局共使用 '+state.history.length+' 次檢查。');
       render();return;
     }
     state.candidates=remaining;
     if(state.day===6){
-      state.over=true;state.busy=false;
+      state.over=true;state.busy=false;state.foxStage='surface';
       setMessage('🦊 狐狸逃過了六次搜查','牠今天藏在 '+state.fox+' 號洞。試試「策略演示」，看看怎麼設計不靠運氣的檢查順序。');
       render();return;
     }
-    setMessage('沒有找到！','第 '+state.day+' 天 '+n+' 號洞是空的；太陽下山後，狐狸一定會換到隔壁的洞。');
+    setMessage('🔎 沒有找到狐狸！','第 '+state.day+' 天檢查的 '+n+' 號洞是空的。這條線索會保留在畫面上方，狐狸今晚必須移往相鄰洞。');
     render();
     await pause(420);
     if(epoch!==ticket)return;
@@ -206,20 +226,28 @@
     setMessage('🌙 夜晚移動中…','狐狸只能往相鄰的洞移動一格，不能原地不動或跳洞。');
     await pause(310);
     if(epoch!==ticket)return;
-    state.fox=state.mode==='demo'?DEMO_PATH[state.day]:randomOf(adjacent(state.fox));
+    const destination=state.mode==='demo'?DEMO_PATH[state.day]:randomOf(adjacent(state.fox));
+    if(state.mode==='demo'){
+      // Walk through the illustrated vertical shaft, horizontal gallery and next shaft.
+      state.foxStage='tunnel';placeFox();
+      await pause(480);
+      if(epoch!==ticket)return;
+    }
+    state.fox=destination;
     state.path.push(state.fox);
     state.candidates=neighborsOf(remaining);
-    $('foxSprite').classList.remove('hop');
-    void $('foxSprite').offsetWidth;
-    $('foxSprite').classList.add('hop');
     placeFox();
-    await pause(820);
+    await pause(state.mode==='demo'?1000:700);
     if(epoch!==ticket)return;
-    $('foxSprite').classList.remove('hop');
+    if(state.mode==='demo'){
+      state.foxStage='shaft';placeFox();
+      await pause(480);
+      if(epoch!==ticket)return;
+    }
     nightVisual(false);
     state.day++;
     state.busy=false;
-    setMessage('☀️ 第 '+state.day+' 天開始','狐狸已移動到相鄰的洞。'+(state.mode==='demo'?'準備檢查 '+STRATEGY[state.day-1]+' 號洞。':'選擇今天要檢查哪一個洞！'));
+    setMessage('☀️ 第 '+state.day+' 天開始','前一天沒有找到狐狸；狐狸已沿地底通道移往隔壁洞。'+(state.mode==='demo'?'接著檢查 '+STRATEGY[state.day-1]+' 號洞。':'請選擇今天要檢查的洞！'));
     render();
   }
   async function autoPlay(){
